@@ -43,7 +43,7 @@ interface VoiceAndChatPanelProps {
 
 const REACTION_EMOJIS = ['🔥', '🔨', '💰', '😱', '👏', '😂', '🧠', '💔'];
 
-export const VoiceAndChatPanel: React.FC<VoiceAndChatPanelProps> = ({
+export const VoiceAndChatPanel: React.FC<VoiceAndChatPanelProps> = React.memo(({
   socket,
   roomCode,
   currentUserId,
@@ -780,4 +780,4 @@ export const VoiceAndChatPanel: React.FC<VoiceAndChatPanelProps> = ({
       </div>
     </div>
   );
-};
+});

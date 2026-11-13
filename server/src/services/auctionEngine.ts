@@ -844,7 +844,8 @@ export class AuctionEngineManager {
       clearInterval(rt.tickInterval);
     }
     rt.pausedRemainingMs = null;
-    rt.timerEndsAt = Date.now() + durationMs;
+    const safeDuration = Math.max(6000, durationMs || 15000);
+    rt.timerEndsAt = Date.now() + safeDuration;
 
     rt.tickInterval = setInterval(() => {
       if (!rt.timerEndsAt || rt.isTransitioning) return;
@@ -1110,9 +1111,16 @@ export class AuctionEngineManager {
       );
 
     if (allHumansPassed && !rt.botTimeout && rt.timerEndsAt) {
-      const fastEnd = Date.now() + 700;
+      // Graceful final countdown: at least 3.5 seconds so players clearly see "Going Twice / Hammer Falling"
+      // and bots have a realistic window to finalize interest, preventing timer from instantly vanishing!
+      const fastEnd = Date.now() + 3500;
       if (rt.timerEndsAt > fastEnd) {
         rt.timerEndsAt = fastEnd;
+        this.io?.to(this.socketRoomKey(code)).emit('auction:tick', {
+          remainingMs: Math.max(0, rt.timerEndsAt - Date.now()),
+          timerEndsAt: rt.timerEndsAt,
+          serverNow: Date.now(),
+        });
       }
     }
   }
@@ -2366,7 +2374,8 @@ export class AuctionEngineManager {
               createdAt: nowIso,
             };
 
-            rt.timerEndsAt = Date.now() + 450;
+            // Real-time broadcast: Bot places bid, clock shows 2.8s "Going Twice", gavel falls smoothly
+            rt.timerEndsAt = Date.now() + 2800;
             const midSnapshot = this.getRoomSnapshot(code);
             this.io?.to(this.socketRoomKey(code)).emit('auction:bid_placed', {
               bid: createdBid,
@@ -2375,21 +2384,37 @@ export class AuctionEngineManager {
               serverNow: Date.now(),
               passedTeams: [],
             });
+            this.io?.to(this.socketRoomKey(code)).emit('auction:tick', {
+              remainingMs: 2800,
+              timerEndsAt: rt.timerEndsAt,
+              serverNow: Date.now(),
+            });
             this.broadcastRoomState(code, midSnapshot);
 
-            // Brief 350ms delay so players see the bid hit the board and hear the blip before gavel falls!
+            // Smooth 2.8s televised countdown so players see the bid land, hear the call, and watch the gavel fall!
             setTimeout(() => {
               rt.isTransitioning = false;
               this.finalizeCurrentLot(rt);
-            }, 350);
+            }, 2800);
             return;
           }
         }
       }
     }
 
-    rt.isTransitioning = false;
-    this.finalizeCurrentLot(rt);
+    // If no bots want to bid or lot already has a standing bid, don't abruptly vanish in 0ms!
+    // Give a clear 2.0s countdown with "Going Twice... Hammer Falling!" broadcast tape!
+    rt.timerEndsAt = Date.now() + 2200;
+    this.io?.to(this.socketRoomKey(code)).emit('auction:tick', {
+      remainingMs: 2200,
+      timerEndsAt: rt.timerEndsAt,
+      serverNow: Date.now(),
+    });
+
+    setTimeout(() => {
+      rt.isTransitioning = false;
+      this.finalizeCurrentLot(rt);
+    }, 2200);
   }
 
   toggleAcceleratedMode(params: {

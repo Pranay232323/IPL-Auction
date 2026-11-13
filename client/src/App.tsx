@@ -50,7 +50,7 @@ const AppShell: React.FC = () => {
         onOpenCatalog={() => setCatalogOpen(true)}
       />
 
-      <main className="pb-12">
+      <main className="pb-20 sm:pb-16">
         {loading ? (
           <div className="flex min-h-[65vh] items-center justify-center text-sm font-semibold text-slate-400">
             Initializing IPL Mega Auction Arena...

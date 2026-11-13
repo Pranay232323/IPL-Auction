@@ -12,7 +12,7 @@ interface TeamsOverviewPanelProps {
   currentUserId: string;
 }
 
-export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = ({
+export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = React.memo(({
   room,
   currentUserId,
 }) => {
@@ -242,4 +242,4 @@ export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = ({
       )}
     </div>
   );
-};
+});

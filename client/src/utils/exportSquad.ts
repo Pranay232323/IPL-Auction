@@ -526,7 +526,7 @@ export async function downloadPlayingXIPosterPng(options: SquadPosterOptions): P
   }
 
   // Bench Squad Section
-  const benchY = impactY + 115;
+  const benchY = impactPlayer ? impactY + 115 : impactY + 20;
   const xiIds = new Set(xi.map((p) => p.id));
   if (impactPlayer) xiIds.add(impactPlayer.id);
   const bench = options.squad.filter((p) => !xiIds.has(p.id));

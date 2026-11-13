@@ -68,9 +68,18 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
     }, 4000);
   }, []);
 
+  const serverOffsetRef = useRef<number>(0);
   const syncServerClock = useCallback((serverNow?: number) => {
     if (typeof serverNow === 'number') {
-      setServerOffsetMs(serverNow - Date.now());
+      const currentOffset = serverNow - Date.now();
+      // Only trigger a React state re-render if clock drift exceeds 400ms or on initial load
+      if (
+        serverOffsetRef.current === 0 ||
+        Math.abs(currentOffset - serverOffsetRef.current) > 400
+      ) {
+        serverOffsetRef.current = currentOffset;
+        setServerOffsetMs(currentOffset);
+      }
     }
   }, []);
 
@@ -165,7 +174,11 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
       serverNow: number;
     }) => {
       syncServerClock(data.serverNow);
-      setRoom((prev) => (prev ? { ...prev, timerEndsAt: data.timerEndsAt } : prev));
+      setRoom((prev) => {
+        if (!prev) return prev;
+        if (prev.timerEndsAt === data.timerEndsAt) return prev;
+        return { ...prev, timerEndsAt: data.timerEndsAt };
+      });
     };
 
     const onBidPlaced = (data: {
@@ -475,7 +488,7 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
   const myTeam = room.teams.find((t) => t.userId === user.id) || null;
 
   return (
-    <div className="mx-auto max-w-[1600px] px-2.5 py-4 sm:px-5">
+    <div className="mx-auto max-w-[1600px] px-2.5 py-4 pb-28 lg:pb-20 sm:px-5">
       {/* Toast Error Notification */}
       {toastError && (
         <div className="fixed bottom-16 right-4 z-50 max-w-sm rounded-xl border border-rose-500/50 bg-stadium-950/95 px-4 py-3 text-xs font-bold text-rose-300 shadow-2xl sm:bottom-5">
@@ -526,13 +539,13 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
       {/* ================= 2. ACTIVE / PAUSED LIVE AUCTION STATE ================= */}
       {(room.status === 'ACTIVE' || room.status === 'PAUSED') && (
         <>
-          {/* Mobile Navigation Switcher (< 1024px) */}
-          <div className="mb-3 grid grid-cols-4 gap-1 rounded-xl border border-white/10 bg-stadium-900 p-1 lg:hidden">
+          {/* Mobile Broadcast TV Navigation Switcher (< 1024px) */}
+          <div className="sticky top-2 z-30 mb-3.5 grid grid-cols-4 gap-1.5 rounded-2xl border border-amber-400/30 bg-[#060a18]/95 p-1.5 shadow-2xl backdrop-blur-md lg:hidden">
             {[
-              { id: 'stage', label: 'Stage', icon: Gavel },
+              { id: 'stage', label: 'Arena Stage', icon: Gavel, badge: 'LIVE' },
               { id: 'teams', label: '10 Teams', icon: Users },
-              { id: 'pool', label: 'Lists', icon: ListFilter },
-              { id: 'comms', label: 'Voice/Chat', icon: Mic },
+              { id: 'pool', label: 'Player Lists', icon: ListFilter },
+              { id: 'comms', label: 'Voice & Chat', icon: Mic },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = mobileTab === tab.id;
@@ -543,14 +556,14 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
                   onClick={() =>
                     setMobileTab(tab.id as 'stage' | 'teams' | 'pool' | 'comms')
                   }
-                  className={`flex items-center justify-center gap-1 rounded-lg py-2 text-[11px] font-extrabold transition ${
+                  className={`flex flex-col sm:flex-row items-center justify-center gap-1 rounded-xl py-2 px-1 text-[11px] font-black uppercase tracking-wider transition ${
                     active
-                      ? 'bg-amber-500 text-stadium-950'
-                      : 'text-slate-300 hover:bg-white/5'
+                      ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-stadium-950 shadow-lg shadow-amber-500/25 scale-[1.02]'
+                      : 'text-slate-300 hover:bg-white/5 active:scale-95'
                   }`}
                 >
-                  <Icon className="h-3.5 w-3.5" />
-                  <span>{tab.label}</span>
+                  <Icon className="h-4 w-4" />
+                  <span className="truncate">{tab.label}</span>
                 </button>
               );
             })}

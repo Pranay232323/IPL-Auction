@@ -18,7 +18,7 @@ const BROADCAST_TICKER_ITEMS = [
   '🏆 POST-AUCTION PREDICTOR: HOLISTIC 7-FACTOR AI POTENTIAL & PLAYOFF SIMULATION READY',
 ];
 
-export const BroadcastTicker: React.FC<BroadcastTickerProps> = ({
+export const BroadcastTicker: React.FC<BroadcastTickerProps> = React.memo(({
   room,
   currentLotPlayer,
 }) => {
@@ -92,4 +92,4 @@ export const BroadcastTicker: React.FC<BroadcastTickerProps> = ({
       </div>
     </div>
   );
-};
+});
