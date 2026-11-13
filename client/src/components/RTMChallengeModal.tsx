@@ -56,6 +56,21 @@ export const RTMChallengeModal: React.FC<RTMChallengeModalProps> = ({
           ? currentPrice + 20
           : currentPrice + 25;
 
+  const maxAffordableLakhs = Math.max(minRaiseLakhs, winnerTeam?.purseRemainingLakhs || minRaiseLakhs);
+  const [customRaiseCrores, setCustomRaiseCrores] = useState<string>(() =>
+    (minRaiseLakhs / 100).toFixed(2)
+  );
+
+  useEffect(() => {
+    setCustomRaiseCrores((minRaiseLakhs / 100).toFixed(2));
+  }, [minRaiseLakhs]);
+
+  const parsedCustomLakhs = Math.round((parseFloat(customRaiseCrores) || 0) * 100);
+  const isRaiseValid =
+    !isNaN(parsedCustomLakhs) &&
+    parsedCustomLakhs >= minRaiseLakhs &&
+    parsedCustomLakhs <= maxAffordableLakhs;
+
   // Sound and countdown effect
   useEffect(() => {
     playRtmFanfare();
@@ -264,14 +279,87 @@ export const RTMChallengeModal: React.FC<RTMChallengeModalProps> = ({
             {rtmPrompt.stage === 'FINAL_RAISE_WINNER' && (
               <>
                 {isWinnerOwner || (isHost && Boolean(winnerTeam?.isBot)) ? (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <p className="text-xs text-slate-300">
                       <strong className="text-amber-300">{origMeta?.shortName}</strong> matched your
                       bid of {formatLakhs(currentPrice)}! Under 2025 BCCI rules, you have{' '}
-                      <strong className="text-white">ONE final opportunity</strong> to raise your
-                      bid or pass!
+                      <strong className="text-white">ONE final opportunity</strong> to enter your custom
+                      final bid or pass!
                     </p>
-                    <div className="grid grid-cols-2 gap-3">
+
+                    {/* Interactive Custom Price Input */}
+                    <div className="rounded-2xl border border-amber-500/30 bg-stadium-900/95 p-4 shadow-inner">
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <label className="font-extrabold uppercase tracking-wider text-amber-300">
+                          Enter Your Final Raised Bid:
+                        </label>
+                        <span className="text-[11px] text-slate-400">
+                          Min: <strong className="text-white">{formatLakhs(minRaiseLakhs)}</strong> • Max Purse: <strong className="text-emerald-400">{formatLakhs(maxAffordableLakhs)}</strong>
+                        </span>
+                      </div>
+
+                      <div className="mt-2.5 flex items-center gap-2">
+                        <div className="relative flex-1">
+                          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-mono text-base font-extrabold text-amber-400">
+                            ₹
+                          </span>
+                          <input
+                            type="number"
+                            step="0.05"
+                            min={(minRaiseLakhs / 100).toFixed(2)}
+                            max={(maxAffordableLakhs / 100).toFixed(2)}
+                            value={customRaiseCrores}
+                            onChange={(e) => setCustomRaiseCrores(e.target.value)}
+                            placeholder={(minRaiseLakhs / 100).toFixed(2)}
+                            className="w-full rounded-xl border border-white/20 bg-stadium-950 py-2.5 pl-8 pr-12 font-mono text-lg font-black text-white focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+                          />
+                          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+                            Cr
+                          </span>
+                        </div>
+                        <div className="rounded-xl border border-white/10 bg-stadium-950 px-3 py-2 text-right">
+                          <div className="text-[10px] text-slate-400 uppercase">Equivalent</div>
+                          <div className="font-mono text-xs font-black text-amber-300">
+                            {formatLakhs(parsedCustomLakhs)}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Quick Add Pill Steppers */}
+                      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                        <span className="text-[10px] font-bold uppercase text-slate-400 mr-1">Quick Add:</span>
+                        {[
+                          { label: '+25 L', addLakhs: 25 },
+                          { label: '+50 L', addLakhs: 50 },
+                          { label: '+1.00 Cr', addLakhs: 100 },
+                          { label: '+2.00 Cr', addLakhs: 200 },
+                          { label: '+5.00 Cr', addLakhs: 500 },
+                        ].map((chip) => (
+                          <button
+                            key={chip.label}
+                            type="button"
+                            onClick={() => {
+                              const base = Math.max(minRaiseLakhs, parsedCustomLakhs);
+                              const target = Math.min(maxAffordableLakhs, base + chip.addLakhs);
+                              setCustomRaiseCrores((target / 100).toFixed(2));
+                            }}
+                            className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-bold text-slate-200 transition hover:bg-white/15 hover:text-white"
+                          >
+                            {chip.label}
+                          </button>
+                        ))}
+                      </div>
+
+                      {!isRaiseValid && (
+                        <p className="mt-2 text-[11px] text-rose-400">
+                          {parsedCustomLakhs < minRaiseLakhs
+                            ? `Final raise must be at least ${formatLakhs(minRaiseLakhs)}.`
+                            : `Exceeds max available purse (${formatLakhs(maxAffordableLakhs)}).`}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 pt-1">
                       <button
                         onClick={() => onRaise('PASS')}
                         className="flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-3.5 text-xs font-bold text-slate-300 hover:bg-white/10"
@@ -279,11 +367,12 @@ export const RTMChallengeModal: React.FC<RTMChallengeModalProps> = ({
                         <span>Pass (Concede to {rtmPrompt.originalTeam})</span>
                       </button>
                       <button
-                        onClick={() => onRaise('RAISE', minRaiseLakhs)}
-                        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 py-3.5 text-xs font-black text-stadium-950 shadow-lg shadow-orange-500/30 hover:brightness-110"
+                        disabled={!isRaiseValid}
+                        onClick={() => onRaise('RAISE', parsedCustomLakhs)}
+                        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 py-3.5 text-xs font-black text-stadium-950 shadow-lg shadow-orange-500/30 hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <ArrowUpRight className="h-4 w-4" />
-                        <span>Raise Bid to {formatLakhs(minRaiseLakhs)}</span>
+                        <span>Submit Final Bid: {formatLakhs(parsedCustomLakhs)}</span>
                       </button>
                     </div>
                   </div>
@@ -293,8 +382,8 @@ export const RTMChallengeModal: React.FC<RTMChallengeModalProps> = ({
                     <div className="mt-1 font-bold text-white">
                       <strong className="text-amber-300">{rtmPrompt.originalTeam}</strong> exercised
                       RTM! Waiting for{' '}
-                      <strong className="text-sky-300">{winnerMeta?.name}</strong> to make a final
-                      raise or pass...
+                      <strong className="text-sky-300">{winnerMeta?.name}</strong> to enter a custom
+                      final raise or pass...
                     </div>
                   </div>
                 )}

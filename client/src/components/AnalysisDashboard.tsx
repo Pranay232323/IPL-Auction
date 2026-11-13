@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Trophy,
   Sparkles,
@@ -14,11 +14,15 @@ import {
   Share2,
   Download,
   Swords,
+  Crown,
+  Users,
 } from 'lucide-react';
 import { RoomAnalysisReport, TeamAnalysisRank } from '../types';
 import { formatLakhs, roleBadgeClasses } from '../utils/format';
 import { SquadPosterModal } from './SquadPosterModal';
 import { TournamentSimulatorModal } from './TournamentSimulatorModal';
+import { LineupBuilderModal } from './LineupBuilderModal';
+import { recomputeRankingsWithNewPotentials } from '../utils/teamPotentialEvaluator';
 
 interface AnalysisDashboardProps {
   report: RoomAnalysisReport;
@@ -53,6 +57,12 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
   );
   const [posterTeam, setPosterTeam] = useState<TeamAnalysisRank | null>(null);
   const [tournamentOpen, setTournamentOpen] = useState(false);
+  const [lineupTeam, setLineupTeam] = useState<TeamAnalysisRank | null>(null);
+  const [activeRankings, setActiveRankings] = useState<TeamAnalysisRank[]>(() => report.rankings);
+
+  useEffect(() => {
+    setActiveRankings(report.rankings);
+  }, [report.rankings]);
 
   const toggleRank = (rank: number) => {
     setExpandedRanks((prev) => {
@@ -63,7 +73,7 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
     });
   };
 
-  const champ = report.predictedChampion;
+  const champ = activeRankings[0] || report.predictedChampion;
   const h = report.auctionHighlights;
 
   return (
@@ -253,7 +263,7 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
 
       {/* Rank-Wise #1 to #10 Franchise Breakdown */}
       <div className="space-y-3.5">
-        {report.rankings.map((team) => {
+        {activeRankings.map((team) => {
           const isOpen = expandedRanks.has(team.rank);
           const medal =
             team.rank === 1
@@ -346,14 +356,25 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
                       <strong className="text-amber-300">Pundit Verdict:</strong>{' '}
                       {team.punditVerdict}
                     </p>
-                    <button
-                      type="button"
-                      onClick={() => setPosterTeam(team)}
-                      className="flex items-center gap-1.5 rounded-xl border border-amber-500/40 bg-amber-500/20 px-3.5 py-2.5 text-xs font-black text-amber-300 transition hover:bg-amber-500/30 shadow-md shadow-amber-500/10"
-                    >
-                      <Download className="h-4 w-4" />
-                      <span>HD Squad Poster & Export</span>
-                    </button>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setLineupTeam(team)}
+                        className="flex items-center gap-1.5 rounded-xl border border-amber-500/40 bg-amber-500/20 px-3.5 py-2.5 text-xs font-black text-amber-300 transition hover:bg-amber-500/30 shadow-md shadow-amber-500/10"
+                      >
+                        <Crown className="h-4 w-4" />
+                        <span>Customise Lineup & Captains</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setPosterTeam(team)}
+                        className="flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-xs font-bold text-slate-200 transition hover:bg-white/10"
+                      >
+                        <Download className="h-4 w-4" />
+                        <span>HD Squad Poster & Export</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="grid gap-6 lg:grid-cols-12">
@@ -452,6 +473,16 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
                                   <span className="truncate font-bold text-white">
                                     {p.name}
                                   </span>
+                                  {p.id === team.captain?.id && (
+                                    <span className="rounded bg-amber-400 px-1 py-0.2 text-[8px] font-black text-stadium-950">
+                                      C 👑
+                                    </span>
+                                  )}
+                                  {p.id === team.viceCaptain?.id && p.id !== team.captain?.id && (
+                                    <span className="rounded bg-sky-400 px-1 py-0.2 text-[8px] font-black text-stadium-950">
+                                      VC 🎖️
+                                    </span>
+                                  )}
                                   {p.isOverseas && <span className="text-[10px]">✈️</span>}
                                 </div>
                                 <div className="shrink-0 text-right font-mono text-[11px]">
@@ -493,6 +524,22 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
         })}
       </div>
 
+      {lineupTeam && (
+        <LineupBuilderModal
+          open={Boolean(lineupTeam)}
+          onClose={() => setLineupTeam(null)}
+          team={lineupTeam}
+          onSaveLineup={(updatedTeam) => {
+            const nextRankings = activeRankings.map((t) =>
+              t.teamCode === updatedTeam.teamCode ? updatedTeam : t
+            );
+            const reRanked = recomputeRankingsWithNewPotentials(nextRankings);
+            setActiveRankings(reRanked);
+            setLineupTeam(null);
+          }}
+        />
+      )}
+
       {posterTeam && (
         <SquadPosterModal
           open={Boolean(posterTeam)}
@@ -502,7 +549,11 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
           ownerName={posterTeam.ownerName}
           purseRemainingLakhs={12000 - posterTeam.purseSpentLakhs}
           totalPurseLakhs={12000}
-          squad={posterTeam.bestPlayingXI}
+          squad={
+            posterTeam.fullSquad && posterTeam.fullSquad.length > 0
+              ? posterTeam.fullSquad
+              : posterTeam.bestPlayingXI
+          }
           analysis={posterTeam}
         />
       )}
@@ -511,7 +562,7 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
         <TournamentSimulatorModal
           open={tournamentOpen}
           onClose={() => setTournamentOpen(false)}
-          teams={report.rankings}
+          teams={activeRankings}
         />
       )}
     </div>

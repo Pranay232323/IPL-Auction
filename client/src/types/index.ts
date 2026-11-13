@@ -271,8 +271,11 @@ export interface TeamAnalysisRank {
     squadDepth: number;
     valueEfficiency: number;
   };
+  fullSquad?: SquadBoughtPlayer[];
   bestPlayingXI: SquadBoughtPlayer[];
   impactPlayer: SquadBoughtPlayer | null;
+  captain?: SquadBoughtPlayer | null;
+  viceCaptain?: SquadBoughtPlayer | null;
   mvpPlayer: SquadBoughtPlayer | null;
   mostExpensiveBuy: SquadBoughtPlayer | null;
   bestValueSteal: SquadBoughtPlayer | null;

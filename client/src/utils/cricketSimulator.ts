@@ -15,6 +15,8 @@ export interface BatterScorecard {
   isOut: boolean;
   dismissal?: string;
   isImpactSub?: boolean;
+  isCaptain?: boolean;
+  isViceCaptain?: boolean;
 }
 
 export interface BowlerScorecard {
@@ -26,6 +28,8 @@ export interface BowlerScorecard {
   runsConceded: number;
   wickets: number;
   economy: number;
+  isCaptain?: boolean;
+  isViceCaptain?: boolean;
 }
 
 export interface BallCommentary {
@@ -475,6 +479,9 @@ export function simulateInnings(
   const xi = [...battingTeam.bestPlayingXI];
   const impactSub = battingTeam.impactPlayer;
 
+  const batCapId = rawBattingTeam.captain?.id || battingTeam.captain?.id || xi[0]?.id;
+  const batVcId = rawBattingTeam.viceCaptain?.id || battingTeam.viceCaptain?.id;
+
   // Initialize batters
   const batters: BatterScorecard[] = xi.map((p) => ({
     id: p.id,
@@ -487,6 +494,8 @@ export function simulateInnings(
     strikeRate: 0,
     isOut: false,
     isImpactSub: false,
+    isCaptain: p.id === batCapId,
+    isViceCaptain: p.id === batVcId,
   }));
 
   // Identify eligible bowlers from bowling team (AR & BOWL prioritized)
@@ -505,6 +514,9 @@ export function simulateInnings(
     eligibleBowlers = [...bowlingTeam.bestPlayingXI.slice(0, 5)];
   }
 
+  const bwlCapId = rawBowlingTeam.captain?.id || bowlingTeam.captain?.id || eligibleBowlers[0]?.id;
+  const bwlVcId = rawBowlingTeam.viceCaptain?.id || bowlingTeam.viceCaptain?.id;
+
   const bowlers: BowlerScorecard[] = eligibleBowlers.map((p) => ({
     id: p.id,
     name: p.name,
@@ -514,6 +526,8 @@ export function simulateInnings(
     runsConceded: 0,
     wickets: 0,
     economy: 0,
+    isCaptain: p.id === bwlCapId,
+    isViceCaptain: p.id === bwlVcId,
   }));
 
   let totalRuns = 0;

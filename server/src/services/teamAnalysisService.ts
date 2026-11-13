@@ -49,8 +49,11 @@ export interface TeamAnalysisRank {
   cappedCount: number;
   uncappedCount: number;
   categories: CategoryBreakdown;
+  fullSquad: SquadBoughtPlayer[];
   bestPlayingXI: SquadBoughtPlayer[];
   impactPlayer: SquadBoughtPlayer | null;
+  captain: SquadBoughtPlayer | null;
+  viceCaptain: SquadBoughtPlayer | null;
   mvpPlayer: SquadBoughtPlayer | null;
   mostExpensiveBuy: SquadBoughtPlayer | null;
   bestValueSteal: SquadBoughtPlayer | null;
@@ -548,6 +551,29 @@ export async function generateRoomAnalysis(
                 : `Watch out for: ${weaknesses[0]}.`
             }`;
 
+      const KNOWN_CAPTAIN_NAMES = [
+        'MS Dhoni', 'Rohit Sharma', 'Virat Kohli', 'Pat Cummins', 'Hardik Pandya',
+        'Shreyas Iyer', 'Ruturaj Gaikwad', 'KL Rahul', 'Sanju Samson', 'Rishabh Pant',
+        'Shubman Gill', 'Sam Curran', 'Aiden Markram', 'Faf du Plessis'
+      ];
+      let captain: SquadBoughtPlayer | null = null;
+      for (const name of KNOWN_CAPTAIN_NAMES) {
+        const found = xi.find((p) => p.name.toLowerCase().includes(name.toLowerCase()));
+        if (found) {
+          captain = found;
+          break;
+        }
+      }
+      if (!captain && xi.length > 0) {
+        captain = [...xi].sort((a, b) => b.overallRating - a.overallRating)[0];
+      }
+
+      let viceCaptain: SquadBoughtPlayer | null = null;
+      if (captain && xi.length > 1) {
+        const remaining = xi.filter((p) => p.id !== captain!.id);
+        viceCaptain = remaining.sort((a, b) => b.overallRating - a.overallRating)[0] || null;
+      }
+
       return {
         teamCode: tRow.team_code,
         teamName: meta.name,
@@ -573,8 +599,11 @@ export async function generateRoomAnalysis(
           squadDepth,
           valueEfficiency,
         },
+        fullSquad: squad,
         bestPlayingXI: xi,
         impactPlayer: impact,
+        captain,
+        viceCaptain,
         mvpPlayer,
         mostExpensiveBuy,
         bestValueSteal: bestSteal,
