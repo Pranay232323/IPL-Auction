@@ -203,6 +203,20 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
       soldPriceLakhs: number;
     }) => {
       playSoldGavel();
+      setRoom((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          currentLot: prev.currentLot
+            ? {
+                ...prev.currentLot,
+                currentBidLakhs: data.soldPriceLakhs,
+                currentBidderTeam: data.soldToTeam,
+                status: 'SOLD',
+              }
+            : prev.currentLot,
+        };
+      });
       setHammerBanner({
         type: 'SOLD',
         player: data.player,

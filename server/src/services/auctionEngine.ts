@@ -1206,21 +1206,21 @@ export class AuctionEngineManager {
       const rMap: Record<string, number> = { WK: 0, BAT: 0, AR: 0, BOWL: 0 };
       for (const rc of roleCounts) rMap[rc.role] = rc.cnt;
 
-      let multiplier = 0.95;
-      if (bot.bot_strategy === 'AGGRESSIVE') multiplier = 1.12;
+      let multiplier = 0.96;
+      if (bot.bot_strategy === 'AGGRESSIVE') multiplier = 1.08;
       else if (bot.bot_strategy === 'STAR_HUNTER') {
-        multiplier = playerDto.overallRating >= 89 ? 1.22 : 0.85;
+        multiplier = playerDto.overallRating >= 90 ? 1.10 : 0.88;
       } else if (bot.bot_strategy === 'MONEYBALL') {
-        multiplier = playerDto.overallRating >= 91 ? 0.88 : 1.08;
+        multiplier = playerDto.overallRating >= 91 ? 0.90 : 1.05;
       }
 
       // Role urgency modifiers
-      if (playerDto.role === 'WK' && rMap.WK === 0) multiplier *= 1.25;
-      else if (playerDto.role === 'WK' && rMap.WK >= 3) multiplier *= 0.45;
-      if (playerDto.role === 'BOWL' && rMap.BOWL < 5) multiplier *= 1.1;
-      if (playerDto.role === 'AR' && rMap.AR < 3) multiplier *= 1.12;
+      if (playerDto.role === 'WK' && rMap.WK === 0) multiplier *= 1.12;
+      else if (playerDto.role === 'WK' && rMap.WK >= 3) multiplier *= 0.50;
+      if (playerDto.role === 'BOWL' && rMap.BOWL < 4) multiplier *= 1.06;
+      if (playerDto.role === 'AR' && rMap.AR < 3) multiplier *= 1.06;
 
-      //Deterministic per-team-per-player affinity so not all 9 bots value every player identically
+      // Deterministic per-team-per-player affinity so not all 9 bots value every player identically
       const seed =
         (bot.team_code.charCodeAt(0) * 31 +
           bot.team_code.charCodeAt(1) * 17 +
@@ -1235,9 +1235,30 @@ export class AuctionEngineManager {
         continue;
       }
 
-      const affinityFactor = 0.82 + (seed / 100) * 0.36;
-      const maxWilling = Math.min(
+      const affinityFactor = 0.90 + (seed / 100) * 0.18;
+
+      // Authentic franchise single-player budget cap based on remaining purse and superstar tier
+      const maxSinglePlayerBudgetLakhs = Math.min(
         safeSpendable,
+        Math.round(
+          bot.purse_remaining_lakhs *
+            (playerDto.overallRating >= 96 ? 0.16 : playerDto.overallRating >= 92 ? 0.13 : 0.09)
+        )
+      );
+      const hardRatingCeiling =
+        playerDto.overallRating >= 96
+          ? 1750
+          : playerDto.overallRating >= 93
+            ? 1400
+            : playerDto.overallRating >= 90
+              ? 1050
+              : playerDto.overallRating >= 86
+                ? 700
+                : 450;
+      const budgetCappedCeiling = Math.min(hardRatingCeiling, maxSinglePlayerBudgetLakhs);
+
+      const maxWilling = Math.min(
+        budgetCappedCeiling,
         Math.round((fairVal * multiplier * affinityFactor) / 5) * 5
       );
 
@@ -2237,18 +2258,18 @@ export class AuctionEngineManager {
             const rMap: Record<string, number> = { WK: 0, BAT: 0, AR: 0, BOWL: 0 };
             for (const rc of roleCounts) rMap[rc.role] = rc.cnt;
 
-            let multiplier = 0.95;
-            if (bot.bot_strategy === 'AGGRESSIVE') multiplier = 1.15;
+            let multiplier = 0.96;
+            if (bot.bot_strategy === 'AGGRESSIVE') multiplier = 1.08;
             else if (bot.bot_strategy === 'STAR_HUNTER') {
-              multiplier = playerDto.overallRating >= 89 ? 1.25 : 0.85;
+              multiplier = playerDto.overallRating >= 90 ? 1.10 : 0.88;
             } else if (bot.bot_strategy === 'MONEYBALL') {
-              multiplier = playerDto.overallRating >= 91 ? 0.88 : 1.10;
+              multiplier = playerDto.overallRating >= 91 ? 0.90 : 1.05;
             }
 
-            if (playerDto.role === 'WK' && rMap.WK === 0) multiplier *= 1.25;
-            else if (playerDto.role === 'WK' && rMap.WK >= 3) multiplier *= 0.45;
-            if (playerDto.role === 'BOWL' && rMap.BOWL < 5) multiplier *= 1.10;
-            if (playerDto.role === 'AR' && rMap.AR < 3) multiplier *= 1.12;
+            if (playerDto.role === 'WK' && rMap.WK === 0) multiplier *= 1.12;
+            else if (playerDto.role === 'WK' && rMap.WK >= 3) multiplier *= 0.50;
+            if (playerDto.role === 'BOWL' && rMap.BOWL < 4) multiplier *= 1.06;
+            if (playerDto.role === 'AR' && rMap.AR < 3) multiplier *= 1.06;
 
             const seed =
               (bot.team_code.charCodeAt(0) * 31 +
@@ -2259,9 +2280,30 @@ export class AuctionEngineManager {
             if (playerDto.overallRating <= 78 && seed < 62 && bot.squad_count < 14) continue;
             if (playerDto.overallRating <= 81 && seed < 40) continue;
 
-            const affinityFactor = 0.82 + (seed / 100) * 0.36;
-            const maxWilling = Math.min(
+            const affinityFactor = 0.90 + (seed / 100) * 0.18;
+
+            // Authentic franchise single-player budget cap based on remaining purse and superstar tier
+            const maxSinglePlayerBudgetLakhs = Math.min(
               safeSpendable,
+              Math.round(
+                bot.purse_remaining_lakhs *
+                  (playerDto.overallRating >= 96 ? 0.16 : playerDto.overallRating >= 92 ? 0.13 : 0.09)
+              )
+            );
+            const hardRatingCeiling =
+              playerDto.overallRating >= 96
+                ? 1750
+                : playerDto.overallRating >= 93
+                  ? 1400
+                  : playerDto.overallRating >= 90
+                    ? 1050
+                    : playerDto.overallRating >= 86
+                      ? 700
+                      : 450;
+            const budgetCappedCeiling = Math.min(hardRatingCeiling, maxSinglePlayerBudgetLakhs);
+
+            const maxWilling = Math.min(
+              budgetCappedCeiling,
               Math.round((fairVal * multiplier * affinityFactor) / 5) * 5
             );
 
@@ -2294,6 +2336,9 @@ export class AuctionEngineManager {
 
             winningPrice = Math.max(lotRow.base_price_lakhs, winningPrice);
 
+            const newBidId = uuidv4();
+            const nowIso = new Date().toISOString();
+
             db.prepare(
               `UPDATE auction_lots
                SET current_bid_lakhs = ?, current_bidder_team = ?
@@ -2303,12 +2348,41 @@ export class AuctionEngineManager {
             db.prepare(
               `INSERT INTO auction_bids (id, lot_id, team_code, amount_lakhs, created_at)
                VALUES (?, ?, ?, ?, ?)`
-            ).run(uuidv4(), actualLotId, topBot.teamCode, winningPrice, new Date().toISOString());
+            ).run(newBidId, actualLotId, topBot.teamCode, winningPrice, nowIso);
 
             this.insertSystemChat(
               room.id,
-              `⚡ Pass to AI: ${topBot.teamCode} secured top simulated bid at ${formatCurrencyLakhs(winningPrice)}!`
+              `⚡ Pass to AI: ${topBot.teamCode} placed top bid at ${formatCurrencyLakhs(winningPrice)}!`
             );
+
+            // IMMEDIATELY emit auction:bid_placed so client board updates the price and leading logo with ZERO LAG!
+            const createdBid: BidEntryDTO = {
+              id: newBidId,
+              lotId: actualLotId,
+              playerId: playerDto.id,
+              playerName: playerDto.name,
+              teamCode: topBot.teamCode,
+              amountLakhs: winningPrice,
+              createdAt: nowIso,
+            };
+
+            rt.timerEndsAt = Date.now() + 450;
+            const midSnapshot = this.getRoomSnapshot(code);
+            this.io?.to(this.socketRoomKey(code)).emit('auction:bid_placed', {
+              bid: createdBid,
+              currentLot: midSnapshot.currentLot,
+              timerEndsAt: rt.timerEndsAt,
+              serverNow: Date.now(),
+              passedTeams: [],
+            });
+            this.broadcastRoomState(code, midSnapshot);
+
+            // Brief 350ms delay so players see the bid hit the board and hear the blip before gavel falls!
+            setTimeout(() => {
+              rt.isTransitioning = false;
+              this.finalizeCurrentLot(rt);
+            }, 350);
+            return;
           }
         }
       }

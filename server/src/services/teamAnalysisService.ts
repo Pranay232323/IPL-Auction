@@ -116,26 +116,33 @@ function canBowlRegularly(p: PlayerDTO): boolean {
 }
 
 /**
- * Estimate fair IPL auction value in Lakhs based on overall rating, marquee status & Indian scarcity
+ * Estimate fair IPL auction value in Lakhs based on overall rating, marquee status & Indian scarcity.
+ * Calibrated against real IPL 2025/2026 auction spending dynamics.
  */
 export function estimateFairValueLakhs(p: PlayerDTO): number {
   let val = 30;
-  if (p.overallRating >= 95) val = 1850;
-  else if (p.overallRating >= 92) val = 1450;
-  else if (p.overallRating >= 89) val = 1050;
-  else if (p.overallRating >= 86) val = 725;
-  else if (p.overallRating >= 83) val = 450;
-  else if (p.overallRating >= 80) val = 240;
-  else if (p.overallRating >= 77) val = 110;
-  else val = 45;
+  if (p.overallRating >= 96) val = 1450; // ₹14.50 Cr for 96+ elite icons (Kohli, Bumrah)
+  else if (p.overallRating >= 93) val = 1150; // ₹11.50 Cr for 93-95 stars (Rohit, Surya, Hardik, Rashid)
+  else if (p.overallRating >= 90) val = 850;  // ₹8.50 Cr for 90-92 stars (Gill, Jaiswal, Pant, Starc)
+  else if (p.overallRating >= 86) val = 550;  // ₹5.50 Cr for 86-89 international performers
+  else if (p.overallRating >= 82) val = 320;  // ₹3.20 Cr for 82-85 experienced IPL pros
+  else if (p.overallRating >= 78) val = 160;  // ₹1.60 Cr for 78-81 reliable depth players
+  else if (p.overallRating >= 74) val = 80;   // ₹0.80 Cr for 74-77 emerging talent
+  else val = 35; // Base level uncapped
 
-  // Indian capped stars command a 20% scarcity premium in IPL auctions
+  // Indian capped stars command an authentic 12% scarcity premium in IPL auctions
   if (!p.isOverseas && p.isCapped) {
-    val = Math.round(val * 1.2);
+    val = Math.round(val * 1.12);
   }
+  // All-rounder & wicket-keeper positional premium
   if (p.role === 'AR' || p.role === 'WK') {
-    val = Math.round(val * 1.08);
+    val = Math.round(val * 1.06);
   }
+
+  // Realistic maximum valuation cap so no player's base fair valuation exceeds ₹16.50 Cr
+  const maxCap = p.overallRating >= 96 ? 1650 : p.overallRating >= 93 ? 1350 : 1050;
+  val = Math.min(val, maxCap);
+
   return Math.max(p.basePriceLakhs, val);
 }
 
