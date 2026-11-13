@@ -3,7 +3,7 @@ import { Bot, X, Users, Download } from 'lucide-react';
 import { apiRequest } from '../api/http';
 import { RoomLotItem, RoomSnapshot, TeamCode } from '../types';
 import { formatLakhs, roleBadgeClasses } from '../utils/format';
-import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
+import { FranchiseLogo } from '../utils/franchiseAssets';
 import { PlayerHeadshot } from '../utils/playerPhotos';
 import { SquadPosterModal } from './SquadPosterModal';
 
@@ -66,11 +66,8 @@ export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = ({
             >
               <div className="flex items-center justify-between gap-2.5">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="relative shrink-0">
-                    <FranchiseLogo teamCode={t.teamCode} size="xs" />
-                    <div className="absolute -bottom-1 -right-1">
-                      <FranchiseJersey teamCode={t.teamCode} size="sm" />
-                    </div>
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-stadium-950/90 border border-white/10 p-1 shadow-sm">
+                    <FranchiseLogo teamCode={t.teamCode} size="sm" />
                   </div>
 
                   <div className="min-w-0">

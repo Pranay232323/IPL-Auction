@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { FRANCHISES } from '../types';
-import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
+import { FranchiseLogo } from '../utils/franchiseAssets';
 
 export const AuthScreen: React.FC = () => {
   const { login, register, guestJoin } = useAuth();

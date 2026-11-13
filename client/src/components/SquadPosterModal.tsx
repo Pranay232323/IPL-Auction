@@ -22,7 +22,7 @@ import {
   SquadPosterOptions,
 } from '../utils/exportSquad';
 import { formatLakhs, getFranchiseMeta, roleBadgeClasses } from '../utils/format';
-import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
+import { FranchiseLogo } from '../utils/franchiseAssets';
 import { PlayerHeadshot } from '../utils/playerPhotos';
 
 interface SquadPosterModalProps {
@@ -262,9 +262,8 @@ export const SquadPosterModal: React.FC<SquadPosterModalProps> = ({
             {/* Franchise Banner */}
             <div className="mb-5 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
               <div className="flex items-center gap-3.5">
-                <div className="flex items-center gap-2">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-stadium-950/90 border border-white/20 p-1.5 shadow-lg">
                   <FranchiseLogo teamCode={teamCode} size="lg" />
-                  <FranchiseJersey teamCode={teamCode} size="md" />
                 </div>
                 <div>
                   <h3 className="text-xl font-black uppercase tracking-wider text-white sm:text-2xl">

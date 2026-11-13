@@ -35,7 +35,7 @@ import {
 } from '../utils/sound';
 import { fireTeamConfetti } from '../utils/confetti';
 import { getWishlist, toggleWishlist, WishlistItem } from '../utils/wishlist';
-import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
+import { FranchiseLogo } from '../utils/franchiseAssets';
 import { PlayerHeadshot } from '../utils/playerPhotos';
 import { WarRoomPanel } from './WarRoomPanel';
 import { RTMChallengeModal } from './RTMChallengeModal';
@@ -463,66 +463,71 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
 
         {p && lot ? (
           <div className="grid gap-5 lg:grid-cols-12">
-            {/* Left 7 Cols: Player Profile, Stats & Skill Bars */}
+            {/* Left 7 Cols: Player Profile, Stats & Skill Bars - Star Sports Broadcast Podium */}
             <div className="space-y-4 lg:col-span-7">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3.5">
-                  {/* Official Real Player Headshot & Franchise Jersey Silhouette */}
-                  <PlayerHeadshot
-                    player={p}
-                    teamCode={p.previousTeam || lot.currentBidderTeam}
-                    size="lg"
-                    showBadge
-                  />
+              <div className="flex items-start justify-between gap-3.5">
+                <div className="flex items-center gap-4">
+                  {/* Official Real Player Headshot in Television Studio Cutout Frame */}
+                  <div className="relative shrink-0">
+                    <PlayerHeadshot
+                      player={p}
+                      teamCode={p.previousTeam || lot.currentBidderTeam}
+                      size="lg"
+                      showBadge
+                      className="border-2 border-amber-400/40 shadow-xl"
+                    />
+                  </div>
 
-                  <div>
+                  <div className="min-w-0">
+                    {/* Television Graphic Badges */}
                     <div className="flex flex-wrap items-center gap-1.5">
                       {p.marquee && (
-                        <span className="inline-flex items-center gap-1 rounded bg-amber-500/20 px-2 py-0.5 text-[10px] font-black uppercase text-amber-300 border border-amber-500/40">
-                          <Sparkles className="h-3 w-3" /> Marquee
+                        <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-amber-500/30 to-amber-500/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-300 border border-amber-400/50 shadow-sm">
+                          <Sparkles className="h-3 w-3" /> Marquee Lot
                         </span>
                       )}
                       <span
-                        className={`rounded border px-2 py-0.5 text-[10px] font-extrabold uppercase ${roleBadgeClasses(
+                        className={`rounded-md border px-2 py-0.5 text-[10px] font-black uppercase tracking-wider ${roleBadgeClasses(
                           p.role
                         )}`}
                       >
                         {roleFullLabel(p.role)}
                       </span>
                       <span
-                        className={`rounded px-2 py-0.5 text-[10px] font-bold ${
+                        className={`rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase ${
                           p.isCapped
-                            ? 'bg-emerald-500/15 text-emerald-300'
-                            : 'bg-purple-500/15 text-purple-300'
+                            ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                            : 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
                         }`}
                       >
                         {p.isCapped ? 'Capped' : 'Uncapped'}
                       </span>
                       <span
-                        className={`rounded px-2 py-0.5 text-[10px] font-bold ${
+                        className={`rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase ${
                           p.isOverseas
-                            ? 'bg-sky-500/15 text-sky-300'
-                            : 'bg-orange-500/15 text-orange-300'
+                            ? 'bg-sky-500/15 text-sky-300 border border-sky-500/30'
+                            : 'bg-orange-500/15 text-orange-300 border border-orange-500/30'
                         }`}
                       >
                         {p.isOverseas ? '✈️ Overseas' : '🇮🇳 Indian'}
                       </span>
                       {p.previousTeam && (
-                        <span className="inline-flex items-center gap-1.5 rounded border border-amber-500/30 bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-300">
+                        <span className="inline-flex items-center gap-1.5 rounded-md border border-amber-500/30 bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-300">
                           <FranchiseLogo teamCode={p.previousTeam} size="xs" />
                           Former: {p.previousTeam} (RTM Eligible)
                         </span>
                       )}
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <h2 className="mt-1 text-2xl font-black tracking-tight text-white sm:text-3xl">
+                    {/* TV Lower-Third Player Name Header */}
+                    <div className="mt-1 flex items-center gap-2">
+                      <h2 className="font-display text-2xl font-black uppercase tracking-wide text-white sm:text-4xl drop-shadow-md">
                         {p.name}
                       </h2>
                       <button
                         type="button"
                         onClick={() => toggleWishlist(room.code, p.id)}
-                        className={`rounded-lg p-1.5 transition ${
+                        className={`rounded-xl p-1.5 transition ${
                           wishlistMap.has(p.id)
                             ? 'bg-amber-500/20 text-amber-400'
                             : 'bg-white/5 text-slate-500 hover:text-amber-400'
@@ -541,8 +546,8 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
                       </button>
                     </div>
 
-                    <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-slate-300">
-                      <span className="inline-flex items-center gap-1 font-semibold">
+                    <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-slate-300 font-medium">
+                      <span className="inline-flex items-center gap-1 font-bold text-white">
                         <Globe className="h-3.5 w-3.5 text-sky-400" />
                         {p.country}
                       </span>
@@ -559,9 +564,11 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
                 </div>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-stadium-950/70 px-3.5 py-2 text-xs text-amber-200/90">
-                <Award className="mr-1.5 inline h-3.5 w-3.5 text-amber-400" />
-                <strong className="text-white">Scout Report:</strong> {p.speciality}
+              {/* Broadcaster Scouting Report Banner */}
+              <div className="rounded-2xl border border-white/10 bg-stadium-950/80 px-4 py-2.5 text-xs text-amber-200/90 shadow-inner">
+                <Award className="mr-2 inline h-4 w-4 text-amber-400" />
+                <strong className="text-white uppercase tracking-wider">🎙️ TV Broadcaster Scout Report:</strong>{' '}
+                {p.speciality}
               </div>
 
               {wishlistMap.has(p.id) && (
@@ -591,30 +598,30 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
                 </div>
               )}
 
-              {/* Career IPL / T20 Numbers */}
-              <div className="grid grid-cols-4 gap-2">
-                <div className="rounded-xl border border-white/10 bg-stadium-950/80 p-2.5 text-center">
-                  <div className="text-[10px] font-bold uppercase text-slate-400">Matches</div>
-                  <div className="mt-0.5 font-mono text-base font-black text-white">
+              {/* Career IPL / T20 Numbers - Television Broadcast Telemetry */}
+              <div className="grid grid-cols-4 gap-2.5">
+                <div className="sports-card p-3 text-center">
+                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Matches</div>
+                  <div className="mt-1 font-display text-xl font-black text-white tabular-nums">
                     {p.iplMatches}
                   </div>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-stadium-950/80 p-2.5 text-center">
-                  <div className="text-[10px] font-bold uppercase text-slate-400">Runs / SR</div>
-                  <div className="mt-0.5 font-mono text-sm font-black text-sky-300">
+                <div className="sports-card p-3 text-center">
+                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Runs / SR</div>
+                  <div className="mt-1 font-display text-lg font-black text-sky-300 tabular-nums">
                     {p.iplRuns}{' '}
-                    <span className="text-[11px] text-slate-400">({p.iplStrikeRate})</span>
+                    <span className="text-xs text-slate-400">({p.iplStrikeRate})</span>
                   </div>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-stadium-950/80 p-2.5 text-center">
-                  <div className="text-[10px] font-bold uppercase text-slate-400">Wickets</div>
-                  <div className="mt-0.5 font-mono text-base font-black text-purple-300">
+                <div className="sports-card p-3 text-center">
+                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Wickets</div>
+                  <div className="mt-1 font-display text-xl font-black text-purple-300 tabular-nums">
                     {p.iplWickets}
                   </div>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-stadium-950/80 p-2.5 text-center">
-                  <div className="text-[10px] font-bold uppercase text-slate-400">Economy</div>
-                  <div className="mt-0.5 font-mono text-base font-black text-emerald-300">
+                <div className="sports-card p-3 text-center">
+                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Economy</div>
+                  <div className="mt-1 font-display text-xl font-black text-emerald-300 tabular-nums">
                     {p.iplEconomy > 0 ? p.iplEconomy : '—'}
                   </div>
                 </div>
@@ -691,15 +698,21 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
                   </div>
 
                   {leadingMeta ? (
-                    <div className="mt-3 inline-flex items-center gap-2.5 rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-2 shadow-md">
-                      <FranchiseLogo teamCode={leadingMeta.code} size="xs" />
-                      <FranchiseJersey teamCode={leadingMeta.code} size="sm" />
-                      <span className="text-xs font-black uppercase tracking-wider text-white">
-                        Held by <span className="text-amber-300">{leadingMeta.code}</span> ({leadingMeta.shortName})
-                      </span>
+                    <div className="mt-3.5 inline-flex items-center gap-3 rounded-2xl border border-amber-400/50 bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent px-4 py-2.5 shadow-lg">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-stadium-950/90 border border-white/15 p-1.5 shadow-inner">
+                        <FranchiseLogo teamCode={leadingMeta.code} size="sm" />
+                      </div>
+                      <div className="text-left min-w-0">
+                        <div className="text-[10px] font-black uppercase tracking-widest text-amber-300">
+                          Current Highest Bidder
+                        </div>
+                        <div className="font-display text-sm font-black uppercase tracking-wide text-white truncate">
+                          {leadingMeta.name} ({leadingMeta.code})
+                        </div>
+                      </div>
                     </div>
                   ) : (
-                    <div className="mt-2.5 text-xs font-semibold text-slate-400">
+                    <div className="mt-3 text-xs font-semibold text-slate-400">
                       No bids placed yet — Raise paddle to open at Base Price!
                     </div>
                   )}

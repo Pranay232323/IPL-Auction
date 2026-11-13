@@ -18,7 +18,7 @@ import {
 import { apiRequest } from '../api/http';
 import { RoomSnapshot, TeamCode } from '../types';
 import { formatLakhs, getFranchiseMeta } from '../utils/format';
-import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
+import { FranchiseLogo } from '../utils/franchiseAssets';
 import { RetentionSelectionModal } from './RetentionSelectionModal';
 
 interface WaitingRoomViewProps {
@@ -208,130 +208,128 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
         )}
       </div>
 
-      {/* 10 IPL Franchises Selection Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      {/* 10 IPL Franchises Selection Grid - Broadcast War Room Desks */}
+      <div className="grid gap-4.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {room.teams.map((t) => {
           const isMine = t.userId === currentUserId;
           const isOtherHuman = Boolean(t.userId && t.userId !== currentUserId && !t.isBot);
           const canClaim = !isMine && !isOtherHuman;
-          const meta = getFranchiseMeta(t.teamCode);
 
           return (
             <div
               key={t.teamCode}
               className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border transition-all duration-300 ${
                 isMine
-                  ? 'border-amber-400 bg-gradient-to-b from-stadium-900 via-stadium-950 to-stadium-950 shadow-xl shadow-amber-500/20 ring-2 ring-amber-400/40 scale-[1.02]'
+                  ? 'border-amber-400 bg-gradient-to-b from-[#131d38] via-[#090f22] to-[#040817] shadow-2xl shadow-amber-500/25 ring-2 ring-amber-400/50 scale-[1.02]'
                   : isOtherHuman
-                    ? 'border-white/20 bg-stadium-900/90 shadow-md'
-                    : 'border-white/10 bg-stadium-900/70 hover:border-white/25 hover:bg-stadium-900/90'
+                    ? 'border-white/15 bg-gradient-to-b from-[#0f172a] to-[#060a14] shadow-md opacity-90'
+                    : 'border-white/10 bg-gradient-to-b from-[#0e1628]/90 to-[#050813] hover:border-amber-400/40 hover:shadow-xl'
               }`}
             >
-              {/* Top Accent Strip */}
+              {/* Franchise Official Colors Strip */}
               <div
-                className="h-2 w-full"
+                className="h-2 w-full shadow-sm"
                 style={{
-                  background: `linear-gradient(90deg, ${t.primaryColor}, ${t.secondaryColor})`,
+                  background: `linear-gradient(90deg, ${t.primaryColor}, ${t.secondaryColor || t.primaryColor})`,
                 }}
               />
 
               <div className="p-4 sm:p-5">
-                {/* Team Crest & Name Header */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <FranchiseLogo teamCode={t.teamCode} size="md" />
-                      <div className="absolute -bottom-1 -right-1">
-                        <FranchiseJersey teamCode={t.teamCode} size="sm" />
-                      </div>
-                    </div>
+                {/* Official Crest & Franchise Name - No Overlap Collision */}
+                <div className="flex items-center gap-3.5">
+                  <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl bg-stadium-950/90 border border-white/15 p-2 shadow-inner">
+                    <FranchiseLogo teamCode={t.teamCode} size="md" />
+                  </div>
 
-                    <div>
-                      <h3 className="text-base font-black tracking-wide text-white leading-tight">
-                        {t.teamName}
-                      </h3>
-                      <span className="font-mono text-xs font-extrabold uppercase text-slate-400">
-                        {t.teamCode} Franchise
+                  <div className="min-w-0">
+                    <h3 className="font-display text-base font-black uppercase tracking-wide text-white leading-tight">
+                      {t.teamName}
+                    </h3>
+                    <div className="mt-0.5 flex items-center gap-1.5">
+                      <span
+                        className="rounded px-1.5 py-0.2 text-[10px] font-black text-stadium-950 uppercase"
+                        style={{ backgroundColor: t.primaryColor }}
+                      >
+                        {t.teamCode}
                       </span>
+                      <span className="text-[11px] font-semibold text-slate-400">Franchise</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Purse & RTM Status Metrics */}
-                <div className="mt-4 rounded-2xl border border-white/10 bg-stadium-950/80 p-3">
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                {/* Broadcast Purse & RTM Telemetry - Clean Single-Line Formatting */}
+                <div className="mt-4 rounded-2xl border border-white/10 bg-stadium-950/90 p-3.5 shadow-inner">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
                       Purse Available
                     </span>
-                    <span className="font-mono text-base font-black text-amber-300">
+                    <span className="font-display font-black text-base text-amber-300 tabular-nums">
                       {formatLakhs(t.purseRemainingLakhs)}
                     </span>
                   </div>
 
-                  <div className="mt-2.5 flex items-center justify-between border-t border-white/5 pt-2 text-xs">
-                    <span className="flex items-center gap-1 rounded-md bg-sky-500/15 border border-sky-500/30 px-2 py-0.5 text-[10px] font-black text-sky-300">
-                      🃏 {t.rtmCardsRemaining} RTM Cards
+                  <div className="mt-2 flex items-center justify-between border-t border-white/5 pt-2 text-[11px]">
+                    <span className="font-bold text-sky-300">
+                      🃏 {t.rtmCardsRemaining} RTMs
                     </span>
 
                     {t.retentionsCount > 0 ? (
-                      <span className="flex items-center gap-1 rounded-md bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[10px] font-black text-amber-300">
+                      <span className="font-bold text-amber-300">
                         ⭐ {t.retentionsCount} Retained
                       </span>
                     ) : (
-                      <span className="text-[10px] text-slate-500">0 Retained</span>
+                      <span className="text-slate-500">0 Retained</span>
                     )}
+
+                    <span className="font-bold text-slate-300">
+                      {t.squadCount}/25
+                    </span>
                   </div>
                 </div>
 
-                {/* Owner GM Status Card */}
-                <div className="mt-3.5 rounded-2xl border border-white/10 bg-stadium-950 p-3">
+                {/* Owner GM Desk Status */}
+                <div className="mt-3 rounded-xl border border-white/10 bg-stadium-950/70 p-2.5">
                   {isMine ? (
-                    <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center justify-between gap-1.5">
                       <div className="flex items-center gap-1.5 min-w-0">
                         <UserCheck className="h-4 w-4 text-amber-400 shrink-0" />
-                        <span className="truncate font-black text-amber-300">
+                        <span className="truncate font-display font-black text-xs text-amber-300 uppercase">
                           YOU ({t.ownerName})
                         </span>
                       </div>
                       <span
-                        className={`rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider ${
+                        className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${
                           t.isReady
-                            ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
-                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/50'
+                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                         }`}
                       >
                         {t.isReady ? 'READY ✓' : 'NOT READY'}
                       </span>
                     </div>
                   ) : isOtherHuman ? (
-                    <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center justify-between gap-1.5">
                       <div className="flex items-center gap-1.5 min-w-0">
                         <span className="h-2 w-2 rounded-full bg-emerald-400 shrink-0" />
-                        <span className="truncate font-bold text-white">{t.ownerName}</span>
+                        <span className="truncate font-bold text-xs text-white">{t.ownerName}</span>
                       </div>
-                      <span
-                        className={`rounded-lg px-2 py-0.5 text-[10px] font-black uppercase ${
-                          t.isReady
-                            ? 'bg-emerald-500/20 text-emerald-300'
-                            : 'bg-slate-800 text-slate-400'
-                        }`}
-                      >
-                        {t.isReady ? 'READY' : 'JOINED'}
+                      <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-black uppercase text-slate-300">
+                        {t.isReady ? 'READY' : 'CLAIMED'}
                       </span>
                     </div>
                   ) : t.isBot ? (
-                    <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center justify-between gap-1.5">
                       <div className="flex items-center gap-1.5 min-w-0">
                         <Bot className="h-3.5 w-3.5 text-purple-400 shrink-0" />
-                        <span className="truncate font-bold text-purple-300">{t.ownerName}</span>
+                        <span className="truncate font-bold text-xs text-purple-300">{t.ownerName}</span>
                       </div>
-                      <span className="rounded-lg bg-purple-500/20 border border-purple-500/30 px-2 py-0.5 text-[10px] font-black text-purple-300 uppercase">
+                      <span className="shrink-0 rounded-full bg-purple-500/20 border border-purple-500/30 px-2 py-0.5 text-[9px] font-black text-purple-300 uppercase">
                         {t.botStrategy || 'AI GM'}
                       </span>
                     </div>
                   ) : (
                     <div className="text-center text-xs font-bold text-slate-500 uppercase tracking-wider py-0.5">
-                      Open Franchise Slot
+                      Open Franchise Desk
                     </div>
                   )}
                 </div>
@@ -340,7 +338,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
                 {(isMine || (isHost && !isOtherHuman)) && (
                   <button
                     onClick={() => setRetentionTeam(t.teamCode)}
-                    className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 py-2 text-xs font-black text-amber-300 transition hover:bg-amber-500/20"
+                    className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 py-2 text-xs font-black uppercase tracking-wider text-amber-300 transition hover:bg-amber-500/20 active:scale-98"
                   >
                     <Star className="h-3.5 w-3.5 fill-current text-amber-400" />
                     <span>Manage Retentions ({t.retentionsCount}/5)</span>
@@ -349,19 +347,19 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
               </div>
 
               {/* Action Claim / Takeover Buttons */}
-              <div className="border-t border-white/10 bg-stadium-950/60 p-3 sm:px-4">
+              <div className="border-t border-white/10 bg-stadium-950/80 p-3 sm:px-4">
                 <div className="flex items-center gap-2">
                   {canClaim && (
                     <button
                       onClick={() => onClaimTeam(t.teamCode)}
-                      className="flex-1 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 py-2.5 text-xs font-black text-stadium-950 shadow-md transition hover:brightness-110 active:scale-95"
+                      className="flex-1 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 py-2.5 font-display text-xs font-black uppercase tracking-wider text-stadium-950 shadow-md transition hover:brightness-110 active:scale-95"
                     >
                       {t.isBot ? `Take Over ${t.teamCode}` : `Claim ${t.teamCode}`}
                     </button>
                   )}
 
                   {isMine && (
-                    <div className="flex-1 rounded-xl bg-amber-500/20 border border-amber-400/40 py-2.5 text-center text-xs font-black text-amber-300">
+                    <div className="flex-1 rounded-xl bg-amber-500/20 border border-amber-400/40 py-2.5 text-center font-display text-xs font-black uppercase tracking-wider text-amber-300">
                       ✓ Your Franchise
                     </div>
                   )}

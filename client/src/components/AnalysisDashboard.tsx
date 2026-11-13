@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { RoomAnalysisReport, TeamAnalysisRank } from '../types';
 import { formatLakhs, roleBadgeClasses } from '../utils/format';
-import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
+import { FranchiseLogo } from '../utils/franchiseAssets';
 import { PlayerHeadshot } from '../utils/playerPhotos';
 import { SquadPosterModal } from './SquadPosterModal';
 import { TournamentSimulatorModal } from './TournamentSimulatorModal';
@@ -149,19 +149,18 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
                 </span>
               </div>
 
-              {/* Champion Team Title + Official Crest & Jersey */}
+              {/* Champion Team Title + Official Crest - Television Studio Presentation */}
               <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-3">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-stadium-950/90 border-2 border-amber-400/50 p-2 shadow-xl">
                   <FranchiseLogo teamCode={champ.teamCode} size="lg" />
-                  <FranchiseJersey teamCode={champ.teamCode} size="md" />
                 </div>
                 <div>
                   <h1 className="font-display text-3xl font-black uppercase tracking-tight text-white sm:text-5xl">
                     {champ.teamName} <span className="text-amber-400">({champ.teamCode})</span>
                   </h1>
                   <p className="mt-0.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                    Franchise GM: <span className="text-white">{champ.ownerName}</span> • Squad:{' '}
-                    <span className="text-amber-300">{champ.squadSize} Players</span> ({champ.overseasCount} Overseas)
+                    Franchise GM: <span className="text-white font-extrabold">{champ.ownerName}</span> • Squad:{' '}
+                    <span className="text-amber-300 font-extrabold">{champ.squadSize} Players</span> ({champ.overseasCount} Overseas)
                   </p>
                 </div>
               </div>
@@ -375,9 +374,8 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
                     {medal}
                   </div>
 
-                  <div className="flex items-center gap-2.5 shrink-0">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-stadium-950/90 border border-white/15 p-1.5 shadow-sm">
                     <FranchiseLogo teamCode={team.teamCode} size="md" />
-                    <FranchiseJersey teamCode={team.teamCode} size="sm" />
                   </div>
 
                   <div className="min-w-0">
@@ -543,49 +541,51 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
                                 return (
                                   <div
                                     key={p.id}
-                                    className={`flex items-center justify-between rounded-xl border p-2 text-xs transition ${
+                                    className={`flex items-center justify-between rounded-xl border p-2.5 text-xs transition ${
                                       isCap
-                                        ? 'border-amber-400/50 bg-amber-500/10'
+                                        ? 'border-amber-400/60 bg-amber-500/15'
                                         : isVc
-                                          ? 'border-sky-400/40 bg-sky-500/10'
+                                          ? 'border-sky-400/50 bg-sky-500/15'
                                           : 'border-white/10 bg-stadium-950/80 hover:border-white/20'
                                     }`}
                                   >
-                                    <div className="flex items-center gap-2 min-w-0">
-                                      <span className="font-mono text-[11px] font-black text-slate-500">
+                                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                      <span className="font-mono text-[11px] font-black text-slate-500 shrink-0">
                                         #{idx + 1}
                                       </span>
-                                      <PlayerHeadshot player={p} teamCode={team.teamCode} size="xs" />
-                                      <div className="min-w-0">
-                                        <div className="flex items-center gap-1.5">
+                                      <div className="shrink-0">
+                                        <PlayerHeadshot player={p} teamCode={team.teamCode} size="xs" />
+                                      </div>
+                                      <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-1.5 flex-wrap">
                                           <span
-                                            className={`rounded px-1.5 py-0.2 text-[9px] font-black border ${roleBadgeClasses(
+                                            className={`shrink-0 rounded px-1.5 py-0.5 text-[9px] font-black border leading-none ${roleBadgeClasses(
                                               p.role
                                             )}`}
                                           >
                                             {p.role}
                                           </span>
-                                          <span className="truncate font-black text-white">
+                                          <span className="truncate font-black text-white text-xs">
                                             {p.name}
                                           </span>
                                           {isCap && (
-                                            <span className="rounded bg-amber-400 px-1 py-0.2 text-[8px] font-black text-stadium-950">
+                                            <span className="shrink-0 inline-flex items-center gap-0.5 rounded bg-amber-400 px-1.5 py-0.5 text-[9px] font-black text-stadium-950 leading-none shadow-sm">
                                               C 👑
                                             </span>
                                           )}
                                           {isVc && (
-                                            <span className="rounded bg-sky-400 px-1 py-0.2 text-[8px] font-black text-stadium-950">
+                                            <span className="shrink-0 inline-flex items-center gap-0.5 rounded bg-sky-400 px-1.5 py-0.5 text-[9px] font-black text-stadium-950 leading-none shadow-sm">
                                               VC 🎖️
                                             </span>
                                           )}
-                                          {p.isOverseas && <span className="text-[10px]">✈️</span>}
+                                          {p.isOverseas && <span className="shrink-0 text-[10px]">✈️</span>}
                                         </div>
-                                        <div className="text-[10px] text-slate-400 font-semibold">
+                                        <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
                                           Rating: <span className="text-amber-300 font-bold">{p.overallRating}</span>
                                         </div>
                                       </div>
                                     </div>
-                                    <div className="shrink-0 text-right font-mono text-xs font-black text-amber-300">
+                                    <div className="shrink-0 text-right font-mono text-xs font-black text-amber-300 ml-2">
                                       {formatLakhs(p.soldPriceLakhs)}
                                     </div>
                                   </div>

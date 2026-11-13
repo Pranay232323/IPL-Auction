@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { SquadBoughtPlayer, TeamAnalysisRank, TeamCode } from '../types';
 import { formatLakhs, getFranchiseMeta, roleBadgeClasses } from '../utils/format';
-import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
+import { FranchiseLogo } from '../utils/franchiseAssets';
 import { PlayerHeadshot } from '../utils/playerPhotos';
 import { evaluateTeamPotential } from '../utils/teamPotentialEvaluator';
 
