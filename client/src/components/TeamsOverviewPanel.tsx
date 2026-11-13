@@ -3,7 +3,7 @@ import { Bot, X, Users, Download } from 'lucide-react';
 import { apiRequest } from '../api/http';
 import { RoomLotItem, RoomSnapshot, TeamCode } from '../types';
 import { formatLakhs, roleBadgeClasses } from '../utils/format';
-import { FranchiseLogo } from '../utils/franchiseAssets';
+import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
 import { PlayerHeadshot } from '../utils/playerPhotos';
 import { SquadPosterModal } from './SquadPosterModal';
 
@@ -56,30 +56,39 @@ export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = ({
               key={t.teamCode}
               type="button"
               onClick={() => setInspectTeam(t.teamCode)}
-              className={`w-full rounded-xl border p-2.5 text-left transition ${
+              className={`w-full rounded-2xl border p-3 text-left transition-all duration-150 ${
                 isLeading
-                  ? 'border-amber-400 bg-amber-500/15 shadow-md shadow-amber-500/15'
+                  ? 'border-amber-400 bg-amber-500/15 shadow-lg shadow-amber-500/15 ring-1 ring-amber-400/40'
                   : isMine
-                    ? 'border-sky-400/50 bg-stadium-950'
-                    : 'border-white/10 bg-stadium-950/80 hover:border-white/25'
+                    ? 'border-sky-400/60 bg-stadium-950/90 shadow-md ring-1 ring-sky-400/30'
+                    : 'border-white/10 bg-stadium-950/70 hover:border-white/25 hover:bg-stadium-950/90'
               }`}
             >
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  <FranchiseLogo teamCode={t.teamCode} size="xs" />
+              <div className="flex items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="relative shrink-0">
+                    <FranchiseLogo teamCode={t.teamCode} size="xs" />
+                    <div className="absolute -bottom-1 -right-1">
+                      <FranchiseJersey teamCode={t.teamCode} size="sm" />
+                    </div>
+                  </div>
+
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="truncate text-xs font-bold text-white">
+                      <span className="font-display font-black text-xs text-white">
+                        {t.teamCode}
+                      </span>
+                      <span className="truncate text-xs font-semibold text-slate-300">
                         {t.ownerName || 'Unclaimed'}
                       </span>
                       {t.isBot && <Bot className="h-3 w-3 shrink-0 text-purple-400" />}
                       {isMine && (
-                        <span className="rounded bg-sky-500/20 px-1 py-0.2 text-[9px] font-bold text-sky-300">
+                        <span className="rounded bg-sky-500/20 px-1.5 py-0.2 text-[9px] font-black text-sky-300 border border-sky-500/30">
                           YOU
                         </span>
                       )}
                     </div>
-                    <div className="mt-0.5 flex items-center gap-1.5 text-[10px] text-slate-400">
+                    <div className="mt-0.5 flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
                       <span>WK:{t.roleBreakdown.WK}</span>
                       <span>BAT:{t.roleBreakdown.BAT}</span>
                       <span>AR:{t.roleBreakdown.AR}</span>
@@ -89,16 +98,16 @@ export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = ({
                 </div>
 
                 <div className="text-right shrink-0">
-                  <div className="tabular-nums text-xs font-black text-amber-300">
+                  <div className="tabular-nums font-display text-sm font-black text-amber-300">
                     {formatLakhs(t.purseRemainingLakhs)}
                   </div>
-                  <div className="tabular-nums text-[10px] font-semibold text-slate-400">
-                    {t.squadCount}/25 • OS {t.overseasCount}/8
+                  <div className="tabular-nums text-[10px] font-bold text-slate-400">
+                    {t.squadCount}/25 • OS <span className="text-sky-300">{t.overseasCount}/8</span>
                   </div>
                   <div className="mt-0.5 text-[10px] font-bold text-sky-300">
                     🃏 {t.rtmCardsRemaining} RTM{t.rtmCardsRemaining === 1 ? '' : 's'}
                     {t.retentionsCount > 0 && (
-                      <span className="ml-1 text-amber-300">• ⭐ {t.retentionsCount} Ret</span>
+                      <span className="ml-1 text-amber-300 font-semibold">• ⭐ {t.retentionsCount} Ret</span>
                     )}
                   </div>
                 </div>

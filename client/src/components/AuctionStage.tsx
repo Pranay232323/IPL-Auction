@@ -272,24 +272,25 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
       </div>
 
       {/* Top Status & Host Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-white/10 bg-stadium-900/95 px-3.5 py-2.5">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-2xl border border-white/10 bg-stadium-900/95 px-4 py-3 shadow-md">
         <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="rounded-lg bg-amber-500/20 px-2.5 py-1 font-extrabold uppercase tracking-wider text-amber-300 border border-amber-500/30">
-            {lot ? `${lot.setLabel} • Lot #${lot.lotNumber}/${lot.totalLots}` : 'Auction Arena'}
-          </span>
+          <div className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/40 bg-amber-500/15 px-3 py-1 font-display text-sm font-black uppercase tracking-wider text-amber-300">
+            <Gavel className="h-4 w-4" />
+            <span>{lot ? `${lot.setLabel} • Lot #${lot.lotNumber}/${lot.totalLots}` : 'Auction Arena'}</span>
+          </div>
           {room.acceleratedMode && (
-            <span className="inline-flex items-center gap-1 rounded-lg bg-purple-500/20 px-2 py-1 font-bold text-purple-300 border border-purple-500/30">
-              <Zap className="h-3 w-3" /> Accelerated
+            <span className="inline-flex items-center gap-1 rounded-xl bg-purple-500/25 px-2.5 py-1 text-xs font-black uppercase text-purple-300 border border-purple-500/40 animate-pulse">
+              <Zap className="h-3.5 w-3.5" /> Fast 7s Mode
             </span>
           )}
           <span className="text-slate-400">
-            Sold: <strong className="text-emerald-400">{room.counts.sold}</strong> • Unsold:{' '}
-            <strong className="text-rose-400">{room.counts.unsold}</strong> • Left:{' '}
-            <strong className="text-white">{room.counts.upcoming}</strong>
+            Sold: <strong className="text-emerald-400 font-mono font-bold">{room.counts.sold}</strong> • Unsold:{' '}
+            <strong className="text-rose-400 font-mono font-bold">{room.counts.unsold}</strong> • Left:{' '}
+            <strong className="text-white font-mono font-bold">{room.counts.upcoming}</strong>
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Auctioneer Spoken Commentary Toggle */}
           <button
             type="button"
@@ -298,9 +299,9 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
               setSpeechEnabled(next);
               setAuctioneerVoiceEnabled(next);
             }}
-            className={`flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition ${
+            className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-black uppercase tracking-wider transition ${
               speechEnabled
-                ? 'border-amber-400/40 bg-amber-500/20 text-amber-300'
+                ? 'border-amber-400/50 bg-amber-500/20 text-amber-300 shadow-sm'
                 : 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
             }`}
             title={
@@ -309,7 +310,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
                 : 'Auctioneer Voice Commentary: MUTED (Click to Enable)'
             }
           >
-            {speechEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
+            {speechEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5 text-slate-500" />}
             <span className="hidden sm:inline">Voice Call</span>
           </button>
 
@@ -317,7 +318,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
           <button
             type="button"
             onClick={() => setWarRoomOpen(true)}
-            className="flex items-center gap-1 rounded-lg border border-purple-500/30 bg-purple-500/15 px-2.5 py-1.5 text-xs font-bold text-purple-300 transition hover:bg-purple-500/25"
+            className="flex items-center gap-1.5 rounded-xl border border-purple-500/40 bg-purple-500/20 px-3 py-2 text-xs font-black uppercase tracking-wider text-purple-300 transition hover:bg-purple-500/30 shadow-sm"
             title="Open Franchise War Room Strategy & Target Wishlist"
           >
             <Brain className="h-3.5 w-3.5" />
@@ -331,7 +332,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
 
           <button
             onClick={onOpenLiveRankPreview}
-            className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-1.5 text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/25"
+            className="flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/20 px-3 py-2 text-xs font-black uppercase tracking-wider text-emerald-300 transition hover:bg-emerald-500/30 shadow-sm"
             title="Preview Live AI Squad Rankings (#1–#10)"
           >
             <BarChart3 className="h-3.5 w-3.5" />
@@ -343,7 +344,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
               {room.status === 'ACTIVE' ? (
                 <button
                   onClick={onPause}
-                  className="flex items-center gap-1 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs font-bold text-slate-200 hover:bg-white/10"
+                  className="flex items-center gap-1 rounded-xl border border-white/15 bg-white/5 px-2.5 py-2 text-xs font-bold text-slate-200 hover:bg-white/10"
                 >
                   <Pause className="h-3.5 w-3.5 text-amber-400" />
                   <span>Pause</span>
@@ -351,7 +352,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
               ) : (
                 <button
                   onClick={onResume}
-                  className="flex items-center gap-1 rounded-lg border border-emerald-500/40 bg-emerald-500/20 px-2.5 py-1.5 text-xs font-bold text-emerald-300 hover:bg-emerald-500/30"
+                  className="flex items-center gap-1 rounded-xl border border-emerald-500/40 bg-emerald-500/20 px-2.5 py-2 text-xs font-bold text-emerald-300 hover:bg-emerald-500/30"
                 >
                   <Play className="h-3.5 w-3.5" />
                   <span>Resume</span>
@@ -361,8 +362,8 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
               {room.status === 'ACTIVE' && (
                 <button
                   onClick={onSkip}
-                  className="flex items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1.5 text-xs font-bold text-amber-200 shadow-sm hover:border-amber-500/50 hover:bg-amber-500/20"
-                  title="Not interested? AI bots will bid according to player's market capability and buy immediately"
+                  className="flex items-center gap-1.5 rounded-xl border border-amber-500/40 bg-amber-500/15 px-3 py-2 text-xs font-black uppercase tracking-wider text-amber-300 shadow-sm hover:border-amber-400 hover:bg-amber-500/25 active:scale-95 transition"
+                  title="Not interested? AI bots will bid according to player's market capability and hammer immediately"
                 >
                   <SkipForward className="h-3.5 w-3.5 text-amber-400" />
                   <span className="hidden sm:inline">Pass to AI / Hammer</span>
@@ -372,7 +373,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
 
               <button
                 onClick={() => onToggleAccelerated(!room.acceleratedMode)}
-                className={`flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition ${
+                className={`flex items-center gap-1 rounded-xl border px-2.5 py-2 text-xs font-bold transition ${
                   room.acceleratedMode
                     ? 'border-purple-400 bg-purple-500/20 text-purple-200'
                     : 'border-white/15 bg-white/5 text-slate-300 hover:bg-white/10'
@@ -386,7 +387,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
               {room.counts.unsold > 0 && (
                 <button
                   onClick={onUnsoldRound}
-                  className="flex items-center gap-1 rounded-lg border border-sky-500/30 bg-sky-500/10 px-2.5 py-1.5 text-xs font-bold text-sky-300 hover:bg-sky-500/20"
+                  className="flex items-center gap-1 rounded-xl border border-sky-500/30 bg-sky-500/10 px-2.5 py-2 text-xs font-bold text-sky-300 hover:bg-sky-500/20"
                   title="Bring Unsold Players Back for Accelerated Bidding"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
@@ -404,7 +405,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
                     onFinishAuction();
                   }
                 }}
-                className="flex items-center gap-1 rounded-lg border border-amber-500/40 bg-amber-500/20 px-2.5 py-1.5 text-xs font-extrabold text-amber-300 hover:bg-amber-500/30"
+                className="flex items-center gap-1 rounded-xl border border-amber-500/50 bg-gradient-to-r from-amber-500/30 to-amber-500/15 px-3 py-2 text-xs font-black uppercase tracking-wider text-amber-300 hover:brightness-110 active:scale-95 transition"
                 title="End Auction & Predict Best Team Rankings"
               >
                 <Trophy className="h-3.5 w-3.5" />
@@ -645,21 +646,21 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
             </div>
 
             {/* Right 5 Cols: Live Bid Display + Countdown + Paddle Console */}
-            <div className="flex flex-col justify-between rounded-2xl border border-white/15 bg-stadium-950/90 p-4 lg:col-span-5">
+            <div className="flex flex-col justify-between rounded-3xl border border-white/15 bg-gradient-to-b from-stadium-950 to-[#040817] p-5 lg:col-span-5 shadow-2xl">
               <div>
                 {/* Timer Bar + Clock */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <span className={`text-xs font-black uppercase tracking-wider ${isUrgent ? 'text-rose-400 animate-pulse' : 'text-slate-400'}`}>
                     {room.status === 'PAUSED'
                       ? '⏸️ PAUSED'
                       : isUrgent
-                        ? '🔥 GOING TWICE!'
-                        : '⏱️ BIDDING CLOCK'}
+                        ? '🚨 FINAL CALL • GOING TWICE!'
+                        : '⏱️ OFFICIAL BIDDING CLOCK'}
                   </span>
                   <span
-                    className={`tabular-nums font-mono text-lg font-black ${
+                    className={`tabular-nums font-mono text-xl font-black ${
                       isUrgent
-                        ? 'animate-pulse text-rose-400'
+                        ? 'animate-pulse text-rose-400 drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]'
                         : room.status === 'PAUSED'
                           ? 'text-amber-300'
                           : 'text-emerald-400'
@@ -669,11 +670,11 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
                   </span>
                 </div>
 
-                <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-white/10">
+                <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/10 p-0.5">
                   <div
-                    className={`h-full transition-all duration-100 ${
+                    className={`h-full rounded-full transition-all duration-100 ${
                       isUrgent
-                        ? 'bg-gradient-to-r from-rose-500 to-orange-500'
+                        ? 'bg-gradient-to-r from-rose-500 via-rose-600 to-red-600 shadow-[0_0_12px_rgba(244,63,94,0.7)]'
                         : 'bg-gradient-to-r from-emerald-400 via-amber-400 to-amber-500'
                     }`}
                     style={{ width: `${pctRemaining}%` }}
@@ -681,48 +682,48 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
                 </div>
 
                 {/* Current Bid Display */}
-                <div className="mt-4 rounded-2xl border border-white/10 bg-stadium-900 p-4 text-center">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    {lot.currentBidLakhs ? 'Current Highest Bid' : 'Opening Base Price'}
+                <div className="mt-5 rounded-2xl border border-white/10 bg-gradient-to-b from-stadium-900/90 to-stadium-950 p-5 text-center shadow-lg">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                    {lot.currentBidLakhs ? 'Current Highest Live Bid' : 'Opening Base Price'}
                   </div>
-                  <div className="tabular-nums mt-1 text-3xl font-black text-amber-300 sm:text-4xl">
+                  <div className="tabular-nums font-display mt-1 text-4xl font-black text-amber-300 sm:text-5xl drop-shadow-[0_2px_10px_rgba(245,158,11,0.3)]">
                     {formatLakhs(lot.currentBidLakhs ?? lot.basePriceLakhs)}
                   </div>
 
                   {leadingMeta ? (
-                    <div className="mt-2.5 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-1.5 shadow-md">
+                    <div className="mt-3 inline-flex items-center gap-2.5 rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-2 shadow-md">
                       <FranchiseLogo teamCode={leadingMeta.code} size="xs" />
                       <FranchiseJersey teamCode={leadingMeta.code} size="sm" />
-                      <span className="text-xs font-extrabold text-white">
-                        Held by {leadingMeta.code} ({leadingMeta.shortName})
+                      <span className="text-xs font-black uppercase tracking-wider text-white">
+                        Held by <span className="text-amber-300">{leadingMeta.code}</span> ({leadingMeta.shortName})
                       </span>
                     </div>
                   ) : (
-                    <div className="mt-2 text-xs font-medium text-slate-400">
-                      No bids placed yet — Open at Base Price!
+                    <div className="mt-2.5 text-xs font-semibold text-slate-400">
+                      No bids placed yet — Raise paddle to open at Base Price!
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Paddle Action Buttons */}
-              <div className="mt-4 space-y-2.5">
+              <div className="mt-5 space-y-3">
                 {myTeam && (
-                  <div className="flex items-center justify-between rounded-xl border border-white/10 bg-stadium-900/70 px-3 py-2 text-xs">
+                  <div className="flex items-center justify-between rounded-xl border border-white/10 bg-stadium-900/80 px-3.5 py-2 text-xs">
                     <div className="flex items-center gap-2">
                       <span
-                        className="rounded px-1.5 py-0.5 text-[10px] font-black text-stadium-950"
+                        className="rounded px-2 py-0.5 text-[10px] font-black text-stadium-950"
                         style={{ backgroundColor: myTeam.primaryColor }}
                       >
                         {myTeam.teamCode}
                       </span>
-                      <span className="font-bold text-white">
+                      <span className="font-mono font-black text-amber-300">
                         {formatLakhs(myTeam.purseRemainingLakhs)}
                       </span>
                     </div>
-                    <div className="text-[11px] text-slate-300">
-                      Squad: <strong>{myTeam.squadCount}/25</strong> • OS:{' '}
-                      <strong>{myTeam.overseasCount}/8</strong>
+                    <div className="text-xs text-slate-300">
+                      Squad: <strong className="text-white">{myTeam.squadCount}/25</strong> • OS:{' '}
+                      <strong className="text-sky-300">{myTeam.overseasCount}/8</strong>
                     </div>
                   </div>
                 )}
@@ -731,19 +732,19 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
                   type="button"
                   disabled={!canBid || !myTeam}
                   onClick={() => myTeam && onBid(myTeam.teamCode)}
-                  className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-black shadow-lg transition sm:text-base ${
+                  className={`btn-sports-paddle flex w-full items-center justify-center gap-2.5 rounded-2xl px-5 py-4 font-display text-lg font-black uppercase tracking-wider transition ${
                     canBid
-                      ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-stadium-950 shadow-amber-500/25 hover:brightness-110 active:scale-[0.99]'
-                      : 'cursor-not-allowed border border-white/10 bg-white/5 text-slate-400'
+                      ? 'text-stadium-950 shadow-xl cursor-pointer'
+                      : 'cursor-not-allowed opacity-50 border border-white/10 bg-white/5 text-slate-400 shadow-none'
                   }`}
                 >
-                  <Hand className="h-5 w-5" />
+                  <Hand className="h-6 w-6" />
                   {canBid ? (
                     <span className="tabular-nums">
                       RAISE PADDLE • BID {formatLakhs(nextMin)}
                     </span>
                   ) : (
-                    <span>{blockReason || 'Bidding Unavailable'}</span>
+                    <span className="text-sm">{blockReason || 'Bidding Unavailable'}</span>
                   )}
                 </button>
 

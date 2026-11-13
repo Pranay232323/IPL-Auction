@@ -7,22 +7,121 @@
   body,
   #root {
     min-height: 100%;
-    background-color: #050814;
-    color: #f1f5f9;
+    background-color: #030712;
+    color: #f8fafc;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Rajdhani', 'Inter', sans-serif;
+    letter-spacing: 0.03em;
+    font-weight: 700;
+  }
+}
+
+.font-display {
+  font-family: 'Rajdhani', sans-serif;
 }
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-/* Broadcast subtle stadium grid backdrop */
+/* Authentic Star Sports & IPL Stadium Atmosphere Grid */
 .bg-stadium-grid {
-  background-image: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.12), transparent 55%),
-    radial-gradient(circle at 85% 20%, rgba(59, 130, 246, 0.1), transparent 45%),
+  background-color: #030712;
+  background-image: 
+    radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.22), transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.16), transparent 45%),
+    radial-gradient(circle at 15% 80%, rgba(168, 85, 247, 0.12), transparent 45%),
     linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+}
+
+/* Glassmorphism & Broadcast Depth Panels */
+.glass-panel {
+  background: rgba(9, 14, 30, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-elevated {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(8, 13, 27, 0.96) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.75), 0 0 30px rgba(245, 158, 11, 0.05);
+}
+
+.sports-card {
+  position: relative;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(6, 11, 23, 0.95) 100%);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sports-card:hover {
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 16px 35px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Gold Gradient Text & Ribbons */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FEF08A 0%, #F59E0B 50%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.metallic-gold-border {
+  border: 1px solid transparent;
+  background-image: linear-gradient(rgba(10, 16, 36, 0.95), rgba(10, 16, 36, 0.95)),
+    linear-gradient(135deg, #FDE68A 0%, #D97706 50%, #78350F 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.metallic-silver-border {
+  border: 1px solid transparent;
+  background-image: linear-gradient(rgba(10, 16, 36, 0.95), rgba(10, 16, 36, 0.95)),
+    linear-gradient(135deg, #F1F5F9 0%, #94A3B8 50%, #334155 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Tactile 3D Buttons */
+.btn-sports-paddle {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #B45309 100%);
+  box-shadow: 0 8px 24px -4px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: all 0.15s ease-out;
+}
+
+.btn-sports-paddle:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px -4px rgba(245, 158, 11, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-sports-paddle:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 4px 12px -2px rgba(245, 158, 11, 0.3);
+}
+
+/* Pulse Glow Keyframes */
+@keyframes goldPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.2), inset 0 0 10px rgba(245, 158, 11, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.45), inset 0 0 18px rgba(245, 158, 11, 0.25);
+  }
+}
+
+.animate-gold-glow {
+  animation: goldPulse 2.4s ease-in-out infinite;
 }
 
 @keyframes floatUpReaction {
@@ -79,5 +178,5 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.5);
+  background: rgba(245, 158, 11, 0.6);
 }

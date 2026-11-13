@@ -16,9 +16,13 @@ import {
   Swords,
   Crown,
   Users,
+  Shield,
+  Zap,
 } from 'lucide-react';
 import { RoomAnalysisReport, TeamAnalysisRank } from '../types';
 import { formatLakhs, roleBadgeClasses } from '../utils/format';
+import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
+import { PlayerHeadshot } from '../utils/playerPhotos';
 import { SquadPosterModal } from './SquadPosterModal';
 import { TournamentSimulatorModal } from './TournamentSimulatorModal';
 import { LineupBuilderModal } from './LineupBuilderModal';
@@ -124,139 +128,208 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
         </div>
       </div>
 
-      {/* Predicted Champion Hero Banner */}
+      {/* Predicted Champion Hero Banner - Broadcast Studio Presentation */}
       {champ && (
-        <div className="relative overflow-hidden rounded-2xl border border-amber-400/40 bg-gradient-to-br from-amber-500/20 via-stadium-900 to-stadium-950 p-5 shadow-2xl sm:p-7">
+        <div className="relative overflow-hidden rounded-3xl border border-amber-400/50 bg-gradient-to-br from-amber-500/15 via-[#080d1e] to-[#040711] p-6 shadow-2xl sm:p-8">
+          {/* Top Championship Glowing Ribbon */}
+          <div
+            className="absolute inset-x-0 top-0 h-1.5 shadow-lg"
+            style={{ backgroundColor: champ.primaryColor || '#F59E0B' }}
+          />
+
           <div className="grid items-center gap-6 lg:grid-cols-12">
-            <div className="space-y-3 lg:col-span-8">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-500/20 px-3 py-1 text-xs font-black uppercase tracking-wider text-amber-300">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>#1 Predicted Best Team & Title Favourite</span>
+            <div className="space-y-4 lg:col-span-8">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/30 to-amber-500/10 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-amber-300 shadow-sm">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>IPL 2026 Title Favourite & #1 Predicted Champion</span>
+                </span>
+                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-3 py-1 text-xs font-bold text-emerald-300">
+                  Playoff Qualifier #1
+                </span>
               </div>
 
-              <h1 className="text-2xl font-black text-white sm:text-4xl">
-                🏆 {champ.teamName}{' '}
-                <span className="text-amber-300">({champ.teamCode})</span>
-              </h1>
+              {/* Champion Team Title + Official Crest & Jersey */}
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <FranchiseLogo teamCode={champ.teamCode} size="lg" />
+                  <FranchiseJersey teamCode={champ.teamCode} size="md" />
+                </div>
+                <div>
+                  <h1 className="font-display text-3xl font-black uppercase tracking-tight text-white sm:text-5xl">
+                    {champ.teamName} <span className="text-amber-400">({champ.teamCode})</span>
+                  </h1>
+                  <p className="mt-0.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Franchise GM: <span className="text-white">{champ.ownerName}</span> • Squad:{' '}
+                    <span className="text-amber-300">{champ.squadSize} Players</span> ({champ.overseasCount} Overseas)
+                  </p>
+                </div>
+              </div>
 
-              <p className="text-sm leading-relaxed text-slate-200">{h.headlineSummary}</p>
+              {/* Chief Analyst Verdict Box */}
+              <div className="rounded-2xl border border-white/10 bg-stadium-950/80 p-4 shadow-inner">
+                <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-400">
+                  <Award className="h-4 w-4" />
+                  <span>Broadcaster Squad Verdict</span>
+                </div>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-200">
+                  {h.headlineSummary || champ.punditVerdict}
+                </p>
+              </div>
 
+              {/* Top 4 Playoff Qualifiers Ribbon */}
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <span className="text-xs font-bold uppercase text-slate-400">
-                  Predicted Top 4 Playoffs:
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Predicted Top 4 Qualifiers:
                 </span>
                 {report.playoffTeams.map((tc, i) => (
-                  <span
+                  <div
                     key={tc}
-                    className="rounded-lg border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-1 text-xs font-extrabold text-emerald-300"
+                    className="flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/15 px-3 py-1 text-xs font-black text-emerald-300"
                   >
-                    #{i + 1} {tc}
-                  </span>
+                    <FranchiseLogo teamCode={tc} size="xs" />
+                    <span>#{i + 1} {tc}</span>
+                  </div>
                 ))}
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2.5 rounded-2xl border border-white/15 bg-stadium-950/90 p-4 text-center lg:col-span-4">
-              <div>
-                <div className="text-[10px] font-bold uppercase text-slate-400">AI Score</div>
-                <div className="tabular-nums mt-1 text-2xl font-black text-amber-300">
-                  {champ.overallScore}
+            {/* Right Telemetry Column */}
+            <div className="flex flex-col justify-between gap-4 rounded-3xl border border-white/15 bg-gradient-to-b from-stadium-900/90 to-stadium-950/95 p-5 text-center shadow-xl lg:col-span-4">
+              <div className="grid grid-cols-3 gap-2">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">AI Score</div>
+                  <div className="tabular-nums font-display mt-1 text-3xl font-black text-amber-300">
+                    {champ.overallScore}
+                  </div>
+                  <div className="text-[10px] font-medium text-slate-500">out of 100</div>
                 </div>
-                <div className="text-[10px] text-slate-500">out of 100</div>
-              </div>
-              <div>
-                <div className="text-[10px] font-bold uppercase text-slate-400">Tier</div>
-                <div className="mt-1 text-2xl font-black text-emerald-400">
-                  {champ.grade}
+
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Tier</div>
+                  <div className="font-display mt-1 text-3xl font-black text-emerald-400">
+                    {champ.grade}
+                  </div>
+                  <div className="text-[10px] font-medium text-slate-500">Squad Grade</div>
                 </div>
-                <div className="text-[10px] text-slate-500">Squad Grade</div>
-              </div>
-              <div>
-                <div className="text-[10px] font-bold uppercase text-slate-400">Win Odds</div>
-                <div className="tabular-nums mt-1 text-2xl font-black text-sky-300">
-                  {champ.winProbabilityPct}%
+
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Win Odds</div>
+                  <div className="tabular-nums font-display mt-1 text-3xl font-black text-sky-300">
+                    {champ.winProbabilityPct}%
+                  </div>
+                  <div className="text-[10px] font-medium text-slate-500">Title Odds</div>
                 </div>
-                <div className="text-[10px] text-slate-500">Title Prob.</div>
               </div>
-              <div className="sm:col-span-3 pt-2">
+
+              <div className="space-y-2 pt-1">
                 <button
                   type="button"
                   onClick={() => setTournamentOpen(true)}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 py-2.5 text-xs font-black text-stadium-950 shadow-lg shadow-amber-500/25 transition hover:brightness-110"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 py-3 text-xs font-black uppercase tracking-wider text-stadium-950 shadow-lg shadow-amber-500/25 transition hover:brightness-110 active:scale-[0.99]"
                 >
                   <Swords className="h-4 w-4" />
                   <span>Simulate Season & Playoffs 🏆</span>
                 </button>
+                <p className="text-[10px] font-semibold text-slate-400">
+                  Full 14-Match League Stage + Qualifier 1 + Eliminator + Grand Final
+                </p>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Auction Superlatives Strip */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-white/10 bg-stadium-900/90 p-4">
-          <div className="text-[11px] font-bold uppercase text-slate-400">
-            Total Auction Spend
+      {/* Auction Superlatives Strip - Modern Sports Cards */}
+      <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="sports-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+              Total Auction Spend
+            </span>
+            <span className="rounded-lg bg-amber-500/15 p-1.5 text-amber-400">
+              <Zap className="h-4 w-4" />
+            </span>
           </div>
-          <div className="tabular-nums mt-1 text-xl font-black text-amber-300">
+          <div className="tabular-nums font-display mt-2 text-2xl font-black text-amber-300">
             {formatLakhs(h.totalSpentLakhs)}
           </div>
-          <div className="mt-0.5 text-xs text-slate-400">
-            {h.totalPlayersSold} Sold • {h.totalPlayersUnsold} Unsold
+          <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
+            <span className="font-bold text-emerald-400">{h.totalPlayersSold} Sold</span>
+            <span>•</span>
+            <span>{h.totalPlayersUnsold} Unsold</span>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-stadium-900/90 p-4">
-          <div className="flex items-center gap-1 text-[11px] font-bold uppercase text-slate-400">
-            <Flame className="h-3.5 w-3.5 text-orange-400" />
-            <span>Most Expensive Buy</span>
+        <div className="sports-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-slate-400">
+              <Flame className="h-3.5 w-3.5 text-orange-400" />
+              <span>Record Buy</span>
+            </span>
+            <span className="rounded-lg bg-orange-500/15 p-1.5 text-orange-400">
+              <Flame className="h-4 w-4" />
+            </span>
           </div>
           {h.mostExpensiveOverall ? (
-            <>
-              <div className="mt-1 truncate text-base font-extrabold text-white">
-                {h.mostExpensiveOverall.playerName}
+            <div className="mt-2 flex items-center gap-3">
+              <FranchiseLogo teamCode={h.mostExpensiveOverall.teamCode} size="sm" />
+              <div className="min-w-0">
+                <div className="truncate font-display text-base font-black text-white">
+                  {h.mostExpensiveOverall.playerName}
+                </div>
+                <div className="text-xs font-black text-emerald-400">
+                  {h.mostExpensiveOverall.teamCode} • {formatLakhs(h.mostExpensiveOverall.priceLakhs)}
+                </div>
               </div>
-              <div className="mt-0.5 text-xs font-bold text-emerald-400">
-                {h.mostExpensiveOverall.teamCode} •{' '}
-                {formatLakhs(h.mostExpensiveOverall.priceLakhs)}
-              </div>
-            </>
+            </div>
           ) : (
             <div className="mt-2 text-xs text-slate-500">No players sold yet</div>
           )}
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-stadium-900/90 p-4">
-          <div className="flex items-center gap-1 text-[11px] font-bold uppercase text-slate-400">
-            <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
-            <span>Biggest Value Steal</span>
+        <div className="sports-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-slate-400">
+              <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
+              <span>Biggest Value Steal</span>
+            </span>
+            <span className="rounded-lg bg-emerald-500/15 p-1.5 text-emerald-400">
+              <TrendingUp className="h-4 w-4" />
+            </span>
           </div>
           {h.biggestValueOverall ? (
-            <>
-              <div className="mt-1 truncate text-base font-extrabold text-white">
-                {h.biggestValueOverall.playerName} ({h.biggestValueOverall.overallRating} OVR)
+            <div className="mt-2 flex items-center gap-3">
+              <FranchiseLogo teamCode={h.biggestValueOverall.teamCode} size="sm" />
+              <div className="min-w-0">
+                <div className="truncate font-display text-base font-black text-white">
+                  {h.biggestValueOverall.playerName} ({h.biggestValueOverall.overallRating} OVR)
+                </div>
+                <div className="text-xs font-black text-sky-300">
+                  {h.biggestValueOverall.teamCode} • {formatLakhs(h.biggestValueOverall.priceLakhs)}
+                </div>
               </div>
-              <div className="mt-0.5 text-xs font-bold text-sky-300">
-                {h.biggestValueOverall.teamCode} •{' '}
-                {formatLakhs(h.biggestValueOverall.priceLakhs)}
-              </div>
-            </>
+            </div>
           ) : (
             <div className="mt-2 text-xs text-slate-500">No players sold yet</div>
           )}
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-stadium-900/90 p-4">
-          <div className="flex items-center gap-1 text-[11px] font-bold uppercase text-slate-400">
-            <Award className="h-3.5 w-3.5 text-purple-400" />
-            <span>Analytics Engine</span>
+        <div className="sports-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-slate-400">
+              <Shield className="h-3.5 w-3.5 text-purple-400" />
+              <span>Analytics Solver</span>
+            </span>
+            <span className="rounded-lg bg-purple-500/15 p-1.5 text-purple-400">
+              <Award className="h-4 w-4" />
+            </span>
           </div>
-          <div className="mt-1 text-sm font-extrabold text-white">
+          <div className="font-display mt-2 text-base font-black text-white">
             7-Factor XI Solver
           </div>
-          <div className="mt-0.5 text-xs text-slate-400">
-            Max 4 Overseas XI + Impact Sub
+          <div className="mt-1 text-xs text-slate-400">
+            Optimal 11 + Impact Sub + Max 4 OS
           </div>
         </div>
       </div>
@@ -277,102 +350,110 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
           return (
             <div
               key={team.teamCode}
-              className={`overflow-hidden rounded-2xl border transition ${
+              className={`overflow-hidden rounded-3xl border transition-all duration-200 ${
                 team.rank === 1
-                  ? 'border-amber-400/50 bg-stadium-900 shadow-lg shadow-amber-500/10'
+                  ? 'border-amber-400/60 bg-gradient-to-b from-[#131d36] to-[#070b18] shadow-xl shadow-amber-500/10'
                   : team.playoffQualification
-                    ? 'border-emerald-500/30 bg-stadium-900/95'
-                    : 'border-white/10 bg-stadium-900/85'
+                    ? 'border-emerald-500/40 bg-gradient-to-b from-[#0f1a30] to-[#070b18]'
+                    : 'border-white/10 bg-gradient-to-b from-[#0d1424] to-[#050812]'
               }`}
             >
+              {/* Top Accent Strip */}
+              <div
+                className="h-1 w-full"
+                style={{ backgroundColor: team.primaryColor || '#3B82F6' }}
+              />
+
               {/* Summary Row */}
               <button
                 type="button"
                 onClick={() => toggleRank(team.rank)}
-                className="flex w-full flex-col justify-between gap-3 p-4 text-left sm:flex-row sm:items-center sm:px-6"
+                className="flex w-full flex-col justify-between gap-4 p-4 text-left transition hover:bg-white/[0.02] sm:flex-row sm:items-center sm:px-6"
               >
-                <div className="flex items-center gap-3.5">
-                  <div className="flex h-11 w-14 shrink-0 items-center justify-center rounded-xl bg-stadium-950 font-mono text-sm font-black text-amber-300 border border-white/10">
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="flex h-12 w-14 shrink-0 items-center justify-center rounded-2xl bg-stadium-950/90 font-display text-base font-black text-amber-300 border border-white/15 shadow-inner">
                     {medal}
                   </div>
-                  <div
-                    className="flex h-11 w-12 shrink-0 items-center justify-center rounded-xl text-xs font-black text-stadium-950 shadow"
-                    style={{ backgroundColor: team.primaryColor }}
-                  >
-                    {team.teamCode}
+
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <FranchiseLogo teamCode={team.teamCode} size="md" />
+                    <FranchiseJersey teamCode={team.teamCode} size="sm" />
                   </div>
-                  <div>
+
+                  <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-base font-extrabold text-white">
+                      <span className="font-display text-lg font-black uppercase tracking-wide text-white sm:text-xl">
                         {team.teamName}
                       </span>
                       <span
-                        className={`rounded-md border px-2 py-0.5 text-xs font-black ${gradeBadgeColor(
+                        className={`rounded-lg border px-2.5 py-0.5 text-xs font-black ${gradeBadgeColor(
                           team.grade
                         )}`}
                       >
                         {team.grade}
                       </span>
                       {team.playoffQualification && (
-                        <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-300">
+                        <span className="rounded-full border border-emerald-400/40 bg-emerald-500/20 px-2.5 py-0.5 text-[10px] font-black uppercase text-emerald-300">
                           Playoff Qualifier
                         </span>
                       )}
                     </div>
-                    <div className="mt-0.5 text-xs text-slate-400">
-                      Owner: <strong className="text-slate-200">{team.ownerName}</strong> • Squad:{' '}
-                      <strong className="text-white">{team.squadSize}</strong> ({team.overseasCount}{' '}
-                      OS, {team.cappedCount} Capped, {team.uncappedCount} Uncapped) • Spent:{' '}
-                      <strong className="text-amber-300">
-                        {formatLakhs(team.purseSpentLakhs)}
-                      </strong>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                      <span>Owner: <strong className="text-white">{team.ownerName}</strong></span>
+                      <span>•</span>
+                      <span>Squad: <strong className="text-white">{team.squadSize}</strong> ({team.overseasCount} OS, {team.cappedCount} Capped)</span>
+                      <span>•</span>
+                      <span>Spent: <strong className="text-amber-300 font-mono">{formatLakhs(team.purseSpentLakhs)}</strong></span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between gap-5 sm:justify-end">
+                <div className="flex items-center justify-between gap-6 sm:justify-end shrink-0">
                   <div className="text-right">
-                    <div className="tabular-nums text-xl font-black text-white">
+                    <div className="tabular-nums font-display text-2xl font-black text-white">
                       {team.overallScore}{' '}
                       <span className="text-xs font-normal text-slate-400">/ 100</span>
                     </div>
-                    <div className="tabular-nums text-xs font-semibold text-sky-300">
+                    <div className="tabular-nums text-xs font-bold text-sky-300">
                       Win Prob: {team.winProbabilityPct}%
                     </div>
                   </div>
-                  {isOpen ? (
-                    <ChevronUp className="h-5 w-5 text-slate-400" />
-                  ) : (
-                    <ChevronDown className="h-5 w-5 text-slate-400" />
-                  )}
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300">
+                    {isOpen ? (
+                      <ChevronUp className="h-5 w-5 text-amber-400" />
+                    ) : (
+                      <ChevronDown className="h-5 w-5 text-slate-400" />
+                    )}
+                  </div>
                 </div>
               </button>
 
               {/* Expanded Analytical Breakdown */}
               {isOpen && (
-                <div className="border-t border-white/10 bg-stadium-950/75 p-4 sm:p-6">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                    <p className="flex-1 rounded-xl border border-white/10 bg-stadium-900 px-4 py-3 text-xs leading-relaxed text-slate-200">
-                      <strong className="text-amber-300">Pundit Verdict:</strong>{' '}
+                <div className="border-t border-white/10 bg-stadium-950/80 p-4 sm:p-6">
+                  <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex-1 rounded-2xl border border-white/10 bg-stadium-900/90 px-4 py-3 text-xs leading-relaxed text-slate-200">
+                      <strong className="text-amber-300 uppercase tracking-wider">🎙️ Broadcaster Tactical Verdict:</strong>{' '}
                       {team.punditVerdict}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-2">
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2.5">
                       <button
                         type="button"
                         onClick={() => setLineupTeam(team)}
-                        className="flex items-center gap-1.5 rounded-xl border border-amber-500/40 bg-amber-500/20 px-3.5 py-2.5 text-xs font-black text-amber-300 transition hover:bg-amber-500/30 shadow-md shadow-amber-500/10"
+                        className="flex items-center gap-2 rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-500/25 to-amber-500/10 px-4 py-2.5 text-xs font-black uppercase tracking-wider text-amber-300 transition hover:bg-amber-500/30 shadow-md shadow-amber-500/10 active:scale-[0.98]"
                       >
                         <Crown className="h-4 w-4" />
-                        <span>Customise Lineup & Captains</span>
+                        <span>Customise Lineup & Captains 👑</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => setPosterTeam(team)}
-                        className="flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-xs font-bold text-slate-200 transition hover:bg-white/10"
+                        className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-black uppercase tracking-wider text-slate-200 transition hover:bg-white/10 hover:text-white active:scale-[0.98]"
                       >
                         <Download className="h-4 w-4" />
-                        <span>HD Squad Poster & Export</span>
+                        <span>HD Squad Poster & Export 📊</span>
                       </button>
                     </div>
                   </div>
@@ -380,11 +461,11 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
                   <div className="grid gap-6 lg:grid-cols-12">
                     {/* Left 5 Cols: 7 Category Bars + SWOT */}
                     <div className="space-y-4 lg:col-span-5">
-                      <div className="rounded-xl border border-white/10 bg-stadium-900 p-3.5">
-                        <h4 className="mb-2.5 text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                      <div className="rounded-2xl border border-white/10 bg-stadium-900/90 p-4 shadow-sm">
+                        <h4 className="mb-3 text-xs font-black uppercase tracking-wider text-slate-300">
                           7-Dimension Squad Ratings
                         </h4>
-                        <div className="space-y-2">
+                        <div className="space-y-2.5">
                           {[
                             { label: 'Batting Power', val: team.categories.batting, c: 'bg-sky-400' },
                             { label: 'Pace & Swing', val: team.categories.paceBowling, c: 'bg-purple-400' },
@@ -396,12 +477,12 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
                           ].map((cat) => (
                             <div key={cat.label}>
                               <div className="flex justify-between text-xs">
-                                <span className="text-slate-300">{cat.label}</span>
-                                <span className="tabular-nums font-mono font-bold text-white">
+                                <span className="font-medium text-slate-300">{cat.label}</span>
+                                <span className="tabular-nums font-mono font-black text-white">
                                   {cat.val}/100
                                 </span>
                               </div>
-                              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10">
+                              <div className="mt-1 h-2 overflow-hidden rounded-full bg-white/10">
                                 <div
                                   className={`h-full rounded-full ${cat.c}`}
                                   style={{ width: `${cat.val}%` }}
@@ -417,97 +498,119 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
                         {team.strengths.map((s, i) => (
                           <div
                             key={i}
-                            className="flex items-start gap-2 rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200"
+                            className="flex items-start gap-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2.5 text-xs text-emerald-200"
                           >
-                            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
                             <span>{s}</span>
                           </div>
                         ))}
                         {team.weaknesses.map((w, i) => (
                           <div
                             key={i}
-                            className="flex items-start gap-2 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-200"
+                            className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-2.5 text-xs text-amber-200"
                           >
-                            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-400" />
+                            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
                             <span>{w}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    {/* Right 7 Cols: Predicted Best Playing XI + Impact Sub */}
+                    {/* Right 7 Cols: Predicted Best Playing XI + Impact Sub with Headshots */}
                     <div className="lg:col-span-7">
-                      <div className="rounded-xl border border-white/10 bg-stadium-900 p-3.5">
-                        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-white">
-                            Predicted Optimal Playing XI (Max 4 Overseas)
+                      <div className="rounded-2xl border border-white/10 bg-stadium-900/90 p-4 shadow-sm">
+                        <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+                          <h4 className="font-display text-sm font-black uppercase tracking-wider text-amber-300">
+                            ⚡ Predicted Match-Day Playing XI (Max 4 Overseas)
                           </h4>
-                          <span className="text-[11px] text-slate-400">
+                          <span className="text-xs font-semibold text-slate-400">
                             WK:{team.roleCounts.WK} • BAT:{team.roleCounts.BAT} • AR:
                             {team.roleCounts.AR} • BOWL:{team.roleCounts.BOWL}
                           </span>
                         </div>
 
                         {team.bestPlayingXI.length === 0 ? (
-                          <div className="py-8 text-center text-xs text-slate-500">
-                            No players drafted.
+                          <div className="py-12 text-center text-xs text-slate-500">
+                            No players drafted in squad yet.
                           </div>
                         ) : (
-                          <div className="grid gap-2 sm:grid-cols-2">
-                            {team.bestPlayingXI.map((p, idx) => (
-                              <div
-                                key={p.id}
-                                className="flex items-center justify-between rounded-lg border border-white/10 bg-stadium-950 px-3 py-2 text-xs"
-                              >
-                                <div className="flex items-center gap-2 min-w-0">
-                                  <span className="font-mono text-[10px] font-bold text-slate-500">
-                                    #{idx + 1}
-                                  </span>
-                                  <span
-                                    className={`rounded border px-1 py-0.2 text-[9px] font-bold ${roleBadgeClasses(
-                                      p.role
-                                    )}`}
-                                  >
-                                    {p.role}
-                                  </span>
-                                  <span className="truncate font-bold text-white">
-                                    {p.name}
-                                  </span>
-                                  {p.id === team.captain?.id && (
-                                    <span className="rounded bg-amber-400 px-1 py-0.2 text-[8px] font-black text-stadium-950">
-                                      C 👑
-                                    </span>
-                                  )}
-                                  {p.id === team.viceCaptain?.id && p.id !== team.captain?.id && (
-                                    <span className="rounded bg-sky-400 px-1 py-0.2 text-[8px] font-black text-stadium-950">
-                                      VC 🎖️
-                                    </span>
-                                  )}
-                                  {p.isOverseas && <span className="text-[10px]">✈️</span>}
-                                </div>
-                                <div className="shrink-0 text-right font-mono text-[11px]">
-                                  <span className="font-bold text-amber-300">
-                                    {p.overallRating}
-                                  </span>
-                                  <span className="ml-1.5 text-slate-400">
-                                    {formatLakhs(p.soldPriceLakhs)}
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
+                          <div className="space-y-2">
+                            <div className="grid gap-2 sm:grid-cols-2">
+                              {team.bestPlayingXI.map((p, idx) => {
+                                const isCap = p.id === team.captain?.id;
+                                const isVc = p.id === team.viceCaptain?.id && !isCap;
 
+                                return (
+                                  <div
+                                    key={p.id}
+                                    className={`flex items-center justify-between rounded-xl border p-2 text-xs transition ${
+                                      isCap
+                                        ? 'border-amber-400/50 bg-amber-500/10'
+                                        : isVc
+                                          ? 'border-sky-400/40 bg-sky-500/10'
+                                          : 'border-white/10 bg-stadium-950/80 hover:border-white/20'
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-2 min-w-0">
+                                      <span className="font-mono text-[11px] font-black text-slate-500">
+                                        #{idx + 1}
+                                      </span>
+                                      <PlayerHeadshot player={p} teamCode={team.teamCode} size="xs" />
+                                      <div className="min-w-0">
+                                        <div className="flex items-center gap-1.5">
+                                          <span
+                                            className={`rounded px-1.5 py-0.2 text-[9px] font-black border ${roleBadgeClasses(
+                                              p.role
+                                            )}`}
+                                          >
+                                            {p.role}
+                                          </span>
+                                          <span className="truncate font-black text-white">
+                                            {p.name}
+                                          </span>
+                                          {isCap && (
+                                            <span className="rounded bg-amber-400 px-1 py-0.2 text-[8px] font-black text-stadium-950">
+                                              C 👑
+                                            </span>
+                                          )}
+                                          {isVc && (
+                                            <span className="rounded bg-sky-400 px-1 py-0.2 text-[8px] font-black text-stadium-950">
+                                              VC 🎖️
+                                            </span>
+                                          )}
+                                          {p.isOverseas && <span className="text-[10px]">✈️</span>}
+                                        </div>
+                                        <div className="text-[10px] text-slate-400 font-semibold">
+                                          Rating: <span className="text-amber-300 font-bold">{p.overallRating}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="shrink-0 text-right font-mono text-xs font-black text-amber-300">
+                                      {formatLakhs(p.soldPriceLakhs)}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+
+                            {/* Separated Impact Sub Banner */}
                             {team.impactPlayer && (
-                              <div className="flex items-center justify-between rounded-lg border border-purple-500/40 bg-purple-500/15 px-3 py-2 text-xs sm:col-span-2">
-                                <div className="flex items-center gap-2">
-                                  <span className="rounded bg-purple-400 px-1.5 py-0.5 text-[9px] font-black text-stadium-950">
-                                    IMPACT SUB #12
+                              <div className="mt-3 flex items-center justify-between rounded-xl border-2 border-purple-500/50 bg-purple-500/20 p-2.5 text-xs shadow-md">
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                  <span className="rounded-lg bg-purple-500 px-2 py-1 text-[10px] font-black text-white shadow-sm">
+                                    ⚡ IMPACT SUB #12
                                   </span>
-                                  <span className="font-bold text-white">
-                                    {team.impactPlayer.name} ({team.impactPlayer.role})
-                                  </span>
+                                  <PlayerHeadshot player={team.impactPlayer} teamCode={team.teamCode} size="xs" />
+                                  <div className="min-w-0">
+                                    <span className="truncate font-black text-white">
+                                      {team.impactPlayer.name} [{team.impactPlayer.role}]
+                                    </span>
+                                    <span className="ml-1.5 text-[10px] font-bold text-purple-200">
+                                      {team.impactPlayer.overallRating} OVR
+                                    </span>
+                                  </div>
                                 </div>
-                                <span className="font-mono font-bold text-purple-200">
-                                  {team.impactPlayer.overallRating} OVR •{' '}
+                                <span className="shrink-0 font-mono text-xs font-black text-amber-300">
                                   {formatLakhs(team.impactPlayer.soldPriceLakhs)}
                                 </span>
                               </div>

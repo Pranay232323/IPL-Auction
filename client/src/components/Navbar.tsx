@@ -68,22 +68,22 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <div
             onClick={activeRoomCode ? onExitRoom : undefined}
-            className={`flex items-center gap-2.5 ${activeRoomCode ? 'cursor-pointer' : ''}`}
+            className={`flex items-center gap-3 ${activeRoomCode ? 'cursor-pointer' : ''}`}
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-orange-600 text-stadium-950 shadow-lg shadow-amber-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-orange-600 text-stadium-950 shadow-lg shadow-amber-500/25">
               <Gavel className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-extrabold tracking-wide text-white sm:text-base">
+                <span className="font-display text-base font-black tracking-wide text-white sm:text-lg">
                   IPL MEGA AUCTION
                 </span>
-                <span className="hidden rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-300 border border-amber-500/30 md:inline-block">
+                <span className="hidden rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-300 border border-amber-500/40 md:inline-block">
                   ₹120 Cr • 10 Teams
                 </span>
               </div>
-              <p className="hidden text-[11px] text-slate-400 sm:block">
-                Real-Time Multiplayer Cricket Franchise Arena
+              <p className="hidden text-[11px] font-semibold text-slate-400 sm:block">
+                Real-Time Multiplayer Cricket Franchise War Room
               </p>
             </div>
           </div>

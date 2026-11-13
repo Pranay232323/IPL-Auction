@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { FRANCHISES } from '../types';
+import { FranchiseLogo, FranchiseJersey } from '../utils/franchiseAssets';
 
 export const AuthScreen: React.FC = () => {
   const { login, register, guestJoin } = useAuth();
@@ -69,71 +70,66 @@ export const AuthScreen: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
-      <div className="grid items-center gap-8 lg:grid-cols-12">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:py-14">
+      <div className="grid items-center gap-10 lg:grid-cols-12">
         {/* Left Hero Pitch */}
         <div className="space-y-6 lg:col-span-7">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-gradient-to-r from-amber-500/25 to-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-amber-300 shadow-sm">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Official Mega Auction Rules • 100% Free To Play</span>
+            <span>Official IPL 2026 Mega Auction Arena • Free To Play</span>
           </div>
 
-          <h1 className="text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">
-            Build the Ultimate IPL Dynasty with{' '}
-            <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">
-              ₹120 Crore Purse
+          <h1 className="font-display text-4xl font-black leading-tight tracking-tight text-white sm:text-6xl">
+            BUILD THE ULTIMATE IPL DYNASTY WITH{' '}
+            <span className="gold-gradient-text drop-shadow-[0_2px_12px_rgba(245,158,11,0.3)]">
+              ₹120 CRORE PURSE
             </span>
           </h1>
 
-          <p className="max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
-            Join up to <strong className="text-white">10 live players</strong> in a real-time
-            multiplayer auction room. Claim your favourite IPL franchise, raise your paddle on{' '}
-            <strong className="text-amber-300">588 registered Capped, Uncapped & Overseas</strong>{' '}
-            cricket stars with live voice & chat, and unlock instant{' '}
-            <strong className="text-emerald-300">AI Post-Auction Team Rankings (#1–#10)</strong>.
+          <p className="max-w-xl text-base leading-relaxed text-slate-300">
+            Take command of an official IPL franchise alongside <strong className="text-white">10 live franchise managers</strong>. 
+            Raise your paddle for <strong className="text-amber-300">588 registered cricket superstars</strong> with real photos and official team crests, 
+            use strategic <strong className="text-sky-300">RTM Challenge Cards</strong>, and unleash our <strong className="text-emerald-300">7-Factor AI Potential Engine</strong> to simulate the full IPL season & playoffs.
           </p>
 
-          {/* Feature Grid */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="rounded-xl border border-white/10 bg-stadium-900/80 p-3.5">
-              <Users className="mb-2 h-5 w-5 text-amber-400" />
-              <div className="text-sm font-bold text-white">10 Franchises</div>
-              <div className="text-xs text-slate-400">Live Humans + Smart AI GMs</div>
+          {/* Feature Grid - Sports Broadcast Tiles */}
+          <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
+            <div className="sports-card p-4">
+              <Users className="mb-2.5 h-6 w-6 text-amber-400" />
+              <div className="font-display text-sm font-black uppercase text-white">10 Franchises</div>
+              <div className="text-xs text-slate-400">Live Humans + AI GMs</div>
             </div>
-            <div className="rounded-xl border border-white/10 bg-stadium-900/80 p-3.5">
-              <Gavel className="mb-2 h-5 w-5 text-sky-400" />
-              <div className="text-sm font-bold text-white">588 IPL Stars</div>
-              <div className="text-xs text-slate-400">Capped, Uncapped & Overseas</div>
+            <div className="sports-card p-4">
+              <Gavel className="mb-2.5 h-6 w-6 text-sky-400" />
+              <div className="font-display text-sm font-black uppercase text-white">588 Real Stars</div>
+              <div className="text-xs text-slate-400">Real Photos & Crests</div>
             </div>
-            <div className="rounded-xl border border-white/10 bg-stadium-900/80 p-3.5">
-              <Mic className="mb-2 h-5 w-5 text-emerald-400" />
-              <div className="text-sm font-bold text-white">Voice & Chat</div>
-              <div className="text-xs text-slate-400">LiveKit SFU + WebRTC Call</div>
+            <div className="sports-card p-4">
+              <Mic className="mb-2.5 h-6 w-6 text-emerald-400" />
+              <div className="font-display text-sm font-black uppercase text-white">Voice & Chat</div>
+              <div className="text-xs text-slate-400">LiveKit WebRTC Call</div>
             </div>
-            <div className="rounded-xl border border-white/10 bg-stadium-900/80 p-3.5">
-              <Trophy className="mb-2 h-5 w-5 text-purple-400" />
-              <div className="text-sm font-bold text-white">AI Rank #1–#10</div>
-              <div className="text-xs text-slate-400">Optimal XI & SWOT Verdict</div>
+            <div className="sports-card p-4">
+              <Trophy className="mb-2.5 h-6 w-6 text-purple-400" />
+              <div className="font-display text-sm font-black uppercase text-white">AI Season Sim</div>
+              <div className="text-xs text-slate-400">Playing XI & Playoffs</div>
             </div>
           </div>
 
-          {/* 10 Franchise Badges Strip */}
+          {/* 10 Official Franchise Crests Strip */}
           <div className="pt-2">
-            <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              All 10 Franchises Available
+            <div className="mb-3 text-xs font-black uppercase tracking-wider text-slate-400">
+              Official 10 IPL Franchises Ready for Draft
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2.5">
               {FRANCHISES.map((f) => (
-                <span
+                <div
                   key={f.code}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-stadium-900 px-2.5 py-1 text-xs font-bold text-white"
+                  className="flex items-center gap-2 rounded-2xl border border-white/10 bg-stadium-950/80 px-3 py-1.5 shadow-sm transition hover:border-amber-400/50 hover:bg-stadium-900"
                 >
-                  <span
-                    className="h-2.5 w-2.5 rounded-full"
-                    style={{ backgroundColor: f.primaryColor }}
-                  />
-                  {f.code}
-                </span>
+                  <FranchiseLogo teamCode={f.code} size="xs" />
+                  <span className="font-display text-xs font-black text-white">{f.code}</span>
+                </div>
               ))}
             </div>
           </div>
@@ -141,7 +137,7 @@ export const AuthScreen: React.FC = () => {
 
         {/* Right Auth Card */}
         <div className="lg:col-span-5">
-          <div className="rounded-2xl border border-white/15 bg-stadium-900/95 p-5 shadow-2xl shadow-black/50 sm:p-6">
+          <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-[#0f172a]/95 to-[#050914] p-6 shadow-2xl sm:p-8">
             {/* Mode Switcher */}
             <div className="mb-5 grid grid-cols-3 rounded-xl bg-stadium-950 p-1 border border-white/10">
               <button

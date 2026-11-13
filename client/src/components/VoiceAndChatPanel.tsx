@@ -632,32 +632,32 @@ export const VoiceAndChatPanel: React.FC<VoiceAndChatPanelProps> = ({
       </div>
 
       {/* ================= LIVE TEXT CHAT & BID FEED ================= */}
-      <div className="flex h-[440px] flex-col rounded-2xl border border-white/15 bg-stadium-900/95 shadow-xl">
+      <div className="flex h-[450px] flex-col rounded-3xl border border-white/15 bg-gradient-to-b from-stadium-900 to-stadium-950 shadow-xl overflow-hidden">
         {/* Tabs */}
-        <div className="grid grid-cols-2 border-b border-white/10 p-1.5">
+        <div className="grid grid-cols-2 border-b border-white/10 p-2 bg-stadium-950/80">
           <button
             type="button"
             onClick={() => setActiveTab('chat')}
-            className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-extrabold transition ${
+            className={`flex items-center justify-center gap-1.5 rounded-xl py-2 font-display text-xs font-black uppercase tracking-wider transition ${
               activeTab === 'chat'
-                ? 'bg-amber-500 text-stadium-950'
+                ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-stadium-950 shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
             <MessageSquare className="h-3.5 w-3.5" />
-            <span>Live Room Chat</span>
+            <span>Live Broadcast Chat</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('bids')}
-            className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-extrabold transition ${
+            className={`flex items-center justify-center gap-1.5 rounded-xl py-2 font-display text-xs font-black uppercase tracking-wider transition ${
               activeTab === 'bids'
-                ? 'bg-amber-500 text-stadium-950'
+                ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-stadium-950 shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
             <History className="h-3.5 w-3.5" />
-            <span>Bid Log ({recentBids.length})</span>
+            <span>Live Bid Ticker ({recentBids.length})</span>
           </button>
         </div>
 
