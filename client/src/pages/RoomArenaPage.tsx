@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import { Gavel, Users, ListFilter, Mic, ArrowLeftRight } from 'lucide-react';
 import { apiRequest } from '../api/http';
