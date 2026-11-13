@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+    background-color: #050814;
+    color: #f1f5f9;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Broadcast subtle stadium grid backdrop */
+.bg-stadium-grid {
+  background-image: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.12), transparent 55%),
+    radial-gradient(circle at 85% 20%, rgba(59, 130, 246, 0.1), transparent 45%),
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+}
+
+@keyframes floatUpReaction {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.75);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0px) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-130px) scale(0.95);
+  }
+}
+
+.animate-float-reaction {
+  animation: floatUpReaction 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes stampPop {
+  0% {
+    opacity: 0;
+    transform: scale(1.7) rotate(-8deg);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(0.95) rotate(-3deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-3deg);
+  }
+}
+
+.animate-stamp {
+  animation: stampPop 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Custom sleek scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(10, 16, 36, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.5);
+}
