@@ -160,12 +160,12 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
       setRoom((prev) =>
         prev
           ? {
-              ...prev,
-              currentLot: data.currentLot,
-              timerEndsAt: data.timerEndsAt,
-              passedTeams: [],
-              counts: data.counts,
-            }
+            ...prev,
+            currentLot: data.currentLot,
+            timerEndsAt: data.timerEndsAt,
+            passedTeams: [],
+            counts: data.counts,
+          }
           : prev
       );
     };
@@ -224,11 +224,11 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
           ...prev,
           currentLot: prev.currentLot
             ? {
-                ...prev.currentLot,
-                currentBidLakhs: data.soldPriceLakhs,
-                currentBidderTeam: data.soldToTeam,
-                status: 'SOLD',
-              }
+              ...prev.currentLot,
+              currentBidLakhs: data.soldPriceLakhs,
+              currentBidderTeam: data.soldToTeam,
+              status: 'SOLD',
+            }
             : prev.currentLot,
         };
       });
@@ -558,11 +558,10 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
                   onClick={() =>
                     setMobileTab(tab.id as 'stage' | 'teams' | 'pool' | 'comms')
                   }
-                  className={`flex items-center justify-center gap-1 rounded-lg py-2 text-[11px] font-extrabold transition ${
-                    active
-                      ? 'bg-amber-500 text-stadium-950'
-                      : 'text-slate-300 hover:bg-white/5'
-                  }`}
+                  className={`flex items-center justify-center gap-1 rounded-lg py-2 text-[11px] font-extrabold transition ${active
+                    ? 'bg-amber-500 text-stadium-950'
+                    : 'text-slate-300 hover:bg-white/5'
+                    }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
                   <span>{tab.label}</span>
@@ -636,9 +635,8 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
           <div className="grid gap-4 lg:grid-cols-12">
             {/* Left Column: 10 Franchises Live Purse & Squads */}
             <div
-              className={`${
-                mobileTab === 'teams' ? 'block' : 'hidden'
-              } lg:col-span-3 lg:block`}
+              className={`${mobileTab === 'teams' ? 'block' : 'hidden'
+                } lg:col-span-3 lg:block`}
             >
               <TeamsOverviewPanel
                 room={room}
@@ -649,9 +647,8 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
 
             {/* Center Column: Auction Stage + Player Lists */}
             <div
-              className={`${
-                mobileTab === 'stage' || mobileTab === 'pool' ? 'block' : 'hidden'
-              } space-y-4 lg:col-span-6 lg:block`}
+              className={`${mobileTab === 'stage' || mobileTab === 'pool' ? 'block' : 'hidden'
+                } space-y-4 lg:col-span-6 lg:block`}
             >
               <div className={mobileTab === 'pool' ? 'hidden lg:block' : 'block'}>
                 <AuctionStage
@@ -700,9 +697,8 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
 
             {/* Right Column: Live Voice Call & Chat (Always mounted so voice never drops!) */}
             <div
-              className={`${
-                mobileTab === 'comms' ? 'block' : 'hidden'
-              } lg:col-span-3 lg:block`}
+              className={`${mobileTab === 'comms' ? 'block' : 'hidden'
+                } lg:col-span-3 lg:block`}
             >
               <VoiceAndChatPanel
                 socket={socket}
