@@ -2178,17 +2178,18 @@ export class AuctionEngineManager {
 
     // If current lot is ON_BLOCK and there are AI bots in the room, simulate bot competition
     // up to the player's fair value capability rather than underselling them!
-    if (room.current_lot_id) {
+    const actualLotId = room.current_lot_id;
+    if (actualLotId) {
       const lotRow = db
         .prepare(
-          `SELECT l.*, p.*
+          `SELECT l.id AS lot_id, l.*, p.*
            FROM auction_lots l
            JOIN players p ON p.id = l.player_id
            WHERE l.id = ?`
         )
-        .get(room.current_lot_id) as
+        .get(actualLotId) as
         | (PlayerRecord & {
-            lot_id_val?: string;
+            lot_id: string;
             lot_number: number;
             current_bid_lakhs: number | null;
             current_bidder_team: TeamCode | null;
@@ -2297,17 +2298,23 @@ export class AuctionEngineManager {
               `UPDATE auction_lots
                SET current_bid_lakhs = ?, current_bidder_team = ?
                WHERE id = ?`
-            ).run(winningPrice, topBot.teamCode, lotRow.id);
+            ).run(winningPrice, topBot.teamCode, actualLotId);
 
             db.prepare(
               `INSERT INTO auction_bids (id, lot_id, team_code, amount_lakhs, created_at)
                VALUES (?, ?, ?, ?, ?)`
-            ).run(uuidv4(), lotRow.id, topBot.teamCode, winningPrice, new Date().toISOString());
+            ).run(uuidv4(), actualLotId, topBot.teamCode, winningPrice, new Date().toISOString());
+
+            this.insertSystemChat(
+              room.id,
+              `⚡ Pass to AI: ${topBot.teamCode} secured top simulated bid at ${formatCurrencyLakhs(winningPrice)}!`
+            );
           }
         }
       }
     }
 
+    rt.isTransitioning = false;
     this.finalizeCurrentLot(rt);
   }
 

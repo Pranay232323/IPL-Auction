@@ -74,9 +74,9 @@ export const AuthScreen: React.FC = () => {
       <div className="grid items-center gap-10 lg:grid-cols-12">
         {/* Left Hero Pitch */}
         <div className="space-y-6 lg:col-span-7">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-gradient-to-r from-amber-500/25 to-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-amber-300 shadow-sm">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>Official IPL 2026 Mega Auction Arena • Free To Play</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/50 bg-gradient-to-r from-amber-500/25 via-amber-500/10 to-transparent px-4 py-1.5 text-xs font-black uppercase tracking-widest text-amber-300 shadow-md">
+            <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+            <span>STAR SPORTS 1 HD • TATA IPL 2026 PLAYER AUCTION ARENA</span>
           </div>
 
           <h1 className="font-display text-4xl font-black leading-tight tracking-tight text-white sm:text-6xl">

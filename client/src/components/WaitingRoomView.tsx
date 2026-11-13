@@ -258,10 +258,10 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
                 </div>
 
                 {/* Broadcast Purse & RTM Telemetry - Clean Single-Line Formatting */}
-                <div className="mt-4 rounded-2xl border border-white/10 bg-stadium-950/90 p-3.5 shadow-inner">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                      Purse Available
+                <div className="mt-3.5 rounded-2xl border border-white/10 bg-stadium-950/90 p-3 shadow-inner">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-bold text-slate-400">
+                      Purse
                     </span>
                     <span className="font-display font-black text-base text-amber-300 tabular-nums">
                       {formatLakhs(t.purseRemainingLakhs)}
@@ -270,7 +270,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
 
                   <div className="mt-2 flex items-center justify-between border-t border-white/5 pt-2 text-[11px]">
                     <span className="font-bold text-sky-300">
-                      🃏 {t.rtmCardsRemaining} RTMs
+                      🃏 {t.rtmCardsRemaining} RTM
                     </span>
 
                     {t.retentionsCount > 0 ? (

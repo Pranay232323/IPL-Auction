@@ -585,7 +585,17 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
                   onPass={() => socket?.emit('auction:pass', { roomCode })}
                   onPause={() => socket?.emit('auction:pause', { roomCode })}
                   onResume={() => socket?.emit('auction:resume', { roomCode })}
-                  onSkip={() => socket?.emit('auction:skip', { roomCode })}
+                  onSkip={() => {
+                    socket?.emit(
+                      'auction:skip',
+                      { roomCode },
+                      (res?: { ok: boolean; error?: string }) => {
+                        if (res && !res.ok && res.error) {
+                          showToast(res.error);
+                        }
+                      }
+                    );
+                  }}
                   onToggleAccelerated={(enabled) =>
                     socket?.emit('auction:accelerated', { roomCode, enabled })
                   }

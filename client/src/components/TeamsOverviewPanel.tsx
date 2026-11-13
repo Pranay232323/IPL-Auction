@@ -35,15 +35,15 @@ export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = ({
   const inspectedMeta = room.teams.find((t) => t.teamCode === inspectTeam);
 
   return (
-    <div className="rounded-2xl border border-white/15 bg-stadium-900/95 p-3.5 shadow-xl">
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <Users className="h-4 w-4 text-amber-400" />
-          <h3 className="text-xs font-extrabold uppercase tracking-wider text-white">
-            10 Franchises Live Purse & Squads
+    <div className="rounded-2xl border border-white/15 bg-gradient-to-b from-[#0a1024] to-[#040817] p-3.5 shadow-xl">
+      <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2.5">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+          <h3 className="text-xs font-black uppercase tracking-wider text-amber-300">
+            10 Franchises Live Telemetry
           </h3>
         </div>
-        <span className="text-[11px] text-slate-400">Click team to inspect squad</span>
+        <span className="text-[10px] font-bold text-slate-400">Click team to inspect</span>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">

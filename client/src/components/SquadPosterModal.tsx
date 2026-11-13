@@ -419,12 +419,12 @@ export const SquadPosterModal: React.FC<SquadPosterModalProps> = ({
                                 </span>
                                 <span className="truncate font-black text-white">{p.name}</span>
                                 {isCap && (
-                                  <span className="rounded bg-amber-400 px-1.5 py-0.2 text-[9px] font-black text-stadium-950">
+                                  <span className="shrink-0 rounded bg-amber-400 px-1.5 py-0.5 text-[9px] font-black leading-none text-stadium-950">
                                     C 👑
                                   </span>
                                 )}
                                 {isVc && (
-                                  <span className="rounded bg-sky-400 px-1.5 py-0.2 text-[9px] font-black text-stadium-950">
+                                  <span className="shrink-0 rounded bg-sky-400 px-1.5 py-0.5 text-[9px] font-black leading-none text-stadium-950">
                                     VC 🎖️
                                   </span>
                                 )}

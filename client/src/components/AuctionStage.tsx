@@ -87,6 +87,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
   const [remainingMs, setRemainingMs] = useState<number>(room.timerSeconds * 1000);
   const [speechEnabled, setSpeechEnabled] = useState<boolean>(() => isAuctioneerVoiceEnabled());
   const [warRoomOpen, setWarRoomOpen] = useState(false);
+  const [droppingHammer, setDroppingHammer] = useState(false);
   const [wishlistMap, setWishlistMap] = useState<Map<number, WishlistItem>>(() =>
     getWishlist(room.code)
   );
@@ -373,13 +374,28 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
 
               {room.status === 'ACTIVE' && (
                 <button
-                  onClick={onSkip}
-                  className="flex items-center gap-1.5 rounded-xl border border-amber-500/40 bg-amber-500/15 px-3 py-2 text-xs font-black uppercase tracking-wider text-amber-300 shadow-sm hover:border-amber-400 hover:bg-amber-500/25 active:scale-95 transition"
+                  type="button"
+                  disabled={droppingHammer}
+                  onClick={() => {
+                    if (droppingHammer) return;
+                    setDroppingHammer(true);
+                    onSkip();
+                    setTimeout(() => setDroppingHammer(false), 2000);
+                  }}
+                  className="flex items-center gap-1.5 rounded-xl border border-amber-500/60 bg-gradient-to-r from-amber-500/30 to-amber-500/15 px-3 py-2 text-xs font-black uppercase tracking-wider text-amber-300 shadow-md hover:border-amber-400 hover:bg-amber-500/30 active:scale-95 transition disabled:opacity-50"
                   title="Not interested? AI bots will bid according to player's market capability and hammer immediately"
                 >
-                  <SkipForward className="h-3.5 w-3.5 text-amber-400" />
-                  <span className="hidden sm:inline">Pass to AI / Hammer</span>
-                  <span className="sm:hidden">Hammer</span>
+                  <Gavel
+                    className={`h-3.5 w-3.5 text-amber-400 ${
+                      droppingHammer ? 'animate-bounce' : ''
+                    }`}
+                  />
+                  <span className="hidden sm:inline">
+                    {droppingHammer ? 'Dropping Gavel...' : 'Pass to AI / Hammer'}
+                  </span>
+                  <span className="sm:hidden">
+                    {droppingHammer ? 'Gavel...' : 'Hammer'}
+                  </span>
                 </button>
               )}
 
@@ -664,68 +680,86 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
               </div>
             </div>
 
-            {/* Right 5 Cols: Live Bid Display + Countdown + Paddle Console */}
-            <div className="flex flex-col justify-between rounded-3xl border border-white/15 bg-gradient-to-b from-stadium-950 to-[#040817] p-5 lg:col-span-5 shadow-2xl">
+            {/* Right 5 Cols: Live Television Score Bug & Interactive Paddle Console */}
+            <div className="flex flex-col justify-between rounded-3xl border-2 border-amber-500/30 bg-gradient-to-b from-[#0a1024] via-[#060a17] to-[#02040a] p-5 lg:col-span-5 shadow-[0_15px_40px_rgba(0,0,0,0.8)] ring-1 ring-amber-400/20">
               <div>
-                {/* Timer Bar + Clock */}
-                <div className="flex items-center justify-between">
-                  <span className={`text-xs font-black uppercase tracking-wider ${isUrgent ? 'text-rose-400 animate-pulse' : 'text-slate-400'}`}>
-                    {room.status === 'PAUSED'
-                      ? '⏸️ PAUSED'
-                      : isUrgent
-                        ? '🚨 FINAL CALL • GOING TWICE!'
-                        : '⏱️ OFFICIAL BIDDING CLOCK'}
-                  </span>
+                {/* TV Broadcast Countdown Clock Bug */}
+                <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        isUrgent
+                          ? 'bg-rose-500 animate-ping'
+                          : room.status === 'PAUSED'
+                            ? 'bg-amber-400'
+                            : 'bg-emerald-400 animate-pulse'
+                      }`}
+                    />
+                    <span
+                      className={`text-xs font-black uppercase tracking-wider ${
+                        isUrgent
+                          ? 'text-rose-400 animate-pulse'
+                          : 'text-slate-300'
+                      }`}
+                    >
+                      {room.status === 'PAUSED'
+                        ? '⏸️ AUCTION PAUSED'
+                        : isUrgent
+                          ? '🚨 GOING TWICE • HAMMER FALLING!'
+                          : '⏱️ OFFICIAL BIDDING CLOCK'}
+                    </span>
+                  </div>
+
                   <span
-                    className={`tabular-nums font-mono text-xl font-black ${
+                    className={`tabular-nums font-mono text-2xl font-black ${
                       isUrgent
-                        ? 'animate-pulse text-rose-400 drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]'
+                        ? 'animate-pulse text-rose-400 drop-shadow-[0_0_12px_rgba(244,63,94,0.8)]'
                         : room.status === 'PAUSED'
                           ? 'text-amber-300'
-                          : 'text-emerald-400'
+                          : 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]'
                     }`}
                   >
                     {secondsDisplay}s
                   </span>
                 </div>
 
-                <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/10 p-0.5">
+                <div className="mt-2.5 h-3.5 w-full overflow-hidden rounded-full bg-stadium-950 p-0.5 border border-white/10 shadow-inner">
                   <div
                     className={`h-full rounded-full transition-all duration-100 ${
                       isUrgent
-                        ? 'bg-gradient-to-r from-rose-500 via-rose-600 to-red-600 shadow-[0_0_12px_rgba(244,63,94,0.7)]'
-                        : 'bg-gradient-to-r from-emerald-400 via-amber-400 to-amber-500'
+                        ? 'bg-gradient-to-r from-rose-500 via-rose-600 to-red-600 shadow-[0_0_15px_rgba(244,63,94,0.9)]'
+                        : 'bg-gradient-to-r from-emerald-400 via-amber-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]'
                     }`}
                     style={{ width: `${pctRemaining}%` }}
                   />
                 </div>
 
-                {/* Current Bid Display */}
-                <div className="mt-5 rounded-2xl border border-white/10 bg-gradient-to-b from-stadium-900/90 to-stadium-950 p-5 text-center shadow-lg">
-                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                {/* Television Score Bug - Current Highest Bid Box */}
+                <div className="mt-4 rounded-2xl border border-amber-400/30 bg-gradient-to-b from-[#101b38] via-[#091024] to-[#040817] p-5 text-center shadow-xl">
+                  <div className="text-[11px] font-black uppercase tracking-widest text-amber-400 drop-shadow-sm">
                     {lot.currentBidLakhs ? 'Current Highest Live Bid' : 'Opening Base Price'}
                   </div>
-                  <div className="tabular-nums font-display mt-1 text-4xl font-black text-amber-300 sm:text-5xl drop-shadow-[0_2px_10px_rgba(245,158,11,0.3)]">
+                  <div className="tabular-nums font-display mt-1 text-4xl font-black text-amber-300 sm:text-5xl drop-shadow-[0_2px_14px_rgba(245,158,11,0.4)]">
                     {formatLakhs(lot.currentBidLakhs ?? lot.basePriceLakhs)}
                   </div>
 
                   {leadingMeta ? (
-                    <div className="mt-3.5 inline-flex items-center gap-3 rounded-2xl border border-amber-400/50 bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent px-4 py-2.5 shadow-lg">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-stadium-950/90 border border-white/15 p-1.5 shadow-inner">
+                    <div className="mt-3.5 inline-flex items-center gap-3 rounded-2xl border-2 border-amber-400/60 bg-gradient-to-r from-amber-500/25 via-amber-500/15 to-transparent px-4 py-2.5 shadow-xl">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-stadium-950 border border-white/20 p-1.5 shadow-inner">
                         <FranchiseLogo teamCode={leadingMeta.code} size="sm" />
                       </div>
                       <div className="text-left min-w-0">
                         <div className="text-[10px] font-black uppercase tracking-widest text-amber-300">
                           Current Highest Bidder
                         </div>
-                        <div className="font-display text-sm font-black uppercase tracking-wide text-white truncate">
+                        <div className="font-display text-base font-black uppercase tracking-wide text-white truncate drop-shadow-sm">
                           {leadingMeta.name} ({leadingMeta.code})
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="mt-3 text-xs font-semibold text-slate-400">
-                      No bids placed yet — Raise paddle to open at Base Price!
+                    <div className="mt-3 text-xs font-bold text-slate-400">
+                      No bids yet — Raise paddle to open at Base Price!
                     </div>
                   )}
                 </div>
