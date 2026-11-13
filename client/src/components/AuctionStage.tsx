@@ -291,27 +291,39 @@ export const AuctionStage: React.FC<AuctionStageProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* Auctioneer Spoken Commentary Toggle */}
+          {/* AI Auctioneer Spoken Voice Mute / Unmute Button */}
           <button
             type="button"
             onClick={() => {
               const next = !speechEnabled;
               setSpeechEnabled(next);
               setAuctioneerVoiceEnabled(next);
+              if (!next) {
+                cancelAuctioneerSpeech();
+              }
             }}
             className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-black uppercase tracking-wider transition ${
               speechEnabled
-                ? 'border-amber-400/50 bg-amber-500/20 text-amber-300 shadow-sm'
-                : 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
+                ? 'border-amber-400 bg-amber-500/25 text-amber-300 shadow-md shadow-amber-500/20'
+                : 'border-rose-500/50 bg-rose-500/20 text-rose-300 ring-1 ring-rose-500/40'
             }`}
             title={
               speechEnabled
-                ? 'Auctioneer Voice Commentary: ON (Click to Mute)'
-                : 'Auctioneer Voice Commentary: MUTED (Click to Enable)'
+                ? 'AI Announcer Voice: ON (Click to MUTE speech for bids, sold and unsold)'
+                : 'AI Announcer Voice: MUTED (Click to Turn ON AI speech)'
             }
           >
-            {speechEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5 text-slate-500" />}
-            <span className="hidden sm:inline">Voice Call</span>
+            {speechEnabled ? (
+              <>
+                <Volume2 className="h-4 w-4 text-amber-400 animate-pulse" />
+                <span>AI Voice: ON</span>
+              </>
+            ) : (
+              <>
+                <VolumeX className="h-4 w-4 text-rose-400" />
+                <span>AI Voice: MUTED</span>
+              </>
+            )}
           </button>
 
           {/* Franchise War Room Button */}

@@ -10,9 +10,16 @@ import {
   Database,
   UserPlus,
   ArrowLeft,
+  Mic,
+  MicOff,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { isSfxMuted, setSfxMuted } from '../utils/sound';
+import {
+  isAuctioneerVoiceEnabled,
+  setAuctioneerVoiceEnabled,
+  cancelAuctioneerSpeech,
+} from '../utils/auctioneerVoice';
 
 interface NavbarProps {
   socketConnected: boolean;
@@ -29,12 +36,22 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const { user, logout, guestJoin } = useAuth();
   const [muted, setMuted] = useState<boolean>(() => isSfxMuted());
+  const [aiVoiceEnabled, setAiVoiceEnabled] = useState<boolean>(() => isAuctioneerVoiceEnabled());
   const [switchingTab, setSwitchingTab] = useState(false);
 
   const toggleMute = () => {
     const next = !muted;
     setSfxMuted(next);
     setMuted(next);
+  };
+
+  const toggleAiVoice = () => {
+    const next = !aiVoiceEnabled;
+    setAuctioneerVoiceEnabled(next);
+    setAiVoiceEnabled(next);
+    if (!next) {
+      cancelAuctioneerSpeech();
+    }
   };
 
   const handleNewTabIdentity = async () => {
@@ -112,6 +129,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               <Volume2 className="h-4 w-4 text-emerald-400" />
             )}
+          </button>
+
+          <button
+            onClick={toggleAiVoice}
+            className={`flex items-center gap-1.5 rounded-lg border px-2 py-1.5 text-xs font-bold transition ${
+              aiVoiceEnabled
+                ? 'border-amber-400/50 bg-amber-500/20 text-amber-300'
+                : 'border-rose-500/40 bg-rose-500/15 text-rose-300'
+            }`}
+            title={aiVoiceEnabled ? 'AI Announcer Voice: ON (Click to Mute)' : 'AI Announcer Voice: MUTED (Click to Turn ON)'}
+          >
+            {aiVoiceEnabled ? <Mic className="h-3.5 w-3.5 text-amber-400" /> : <MicOff className="h-3.5 w-3.5 text-rose-400" />}
+            <span className="hidden lg:inline">{aiVoiceEnabled ? 'AI Voice ON' : 'AI Voice MUTED'}</span>
           </button>
 
           {user && (

@@ -349,13 +349,12 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
           return (
             <div
               key={team.teamCode}
-              className={`overflow-hidden rounded-3xl border transition-all duration-200 ${
-                team.rank === 1
+              className={`overflow-hidden rounded-3xl border transition-all duration-200 ${team.rank === 1
                   ? 'border-amber-400/60 bg-gradient-to-b from-[#131d36] to-[#070b18] shadow-xl shadow-amber-500/10'
                   : team.playoffQualification
                     ? 'border-emerald-500/40 bg-gradient-to-b from-[#0f1a30] to-[#070b18]'
                     : 'border-white/10 bg-gradient-to-b from-[#0d1424] to-[#050812]'
-              }`}
+                }`}
             >
               {/* Top Accent Strip */}
               <div
@@ -541,13 +540,12 @@ export const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({
                                 return (
                                   <div
                                     key={p.id}
-                                    className={`flex items-center justify-between rounded-xl border p-2.5 text-xs transition ${
-                                      isCap
+                                    className={`flex items-center justify-between rounded-xl border p-2.5 text-xs transition ${isCap
                                         ? 'border-amber-400/60 bg-amber-500/15'
                                         : isVc
                                           ? 'border-sky-400/50 bg-sky-500/15'
                                           : 'border-white/10 bg-stadium-950/80 hover:border-white/20'
-                                    }`}
+                                      }`}
                                   >
                                     <div className="flex items-center gap-2.5 min-w-0 flex-1">
                                       <span className="font-mono text-[11px] font-black text-slate-500 shrink-0">

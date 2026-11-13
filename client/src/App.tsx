@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AuthScreen } from './components/AuthScreen';
 import { LobbyDirectory } from './components/LobbyDirectory';
 import { MasterPlayerCatalogModal } from './components/MasterPlayerCatalogModal';
+import { BroadcastTicker } from './components/BroadcastTicker';
 import { Navbar } from './components/Navbar';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useSocket } from './hooks/useSocket';
@@ -76,6 +77,8 @@ const AppShell: React.FC = () => {
         onClose={() => setCatalogOpen(false)}
         roomCode={activeRoomCode || undefined}
       />
+
+      <BroadcastTicker />
     </div>
   );
 };
