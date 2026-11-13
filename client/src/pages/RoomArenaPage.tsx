@@ -23,6 +23,8 @@ import {
   VoicePeerMeta,
 } from '../types';
 import { playBidBlip, playSoldGavel, playUnsoldStamp } from '../utils/sound';
+import { formatLakhs } from '../utils/format';
+import { PlayerHeadshot } from '../utils/playerPhotos';
 
 interface RoomArenaPageProps {
   roomCode: string;
@@ -488,7 +490,7 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
   const myTeam = room.teams.find((t) => t.userId === user.id) || null;
 
   return (
-    <div className="mx-auto max-w-[1600px] px-2.5 py-4 pb-28 lg:pb-20 sm:px-5">
+    <div className="mx-auto max-w-[1600px] px-2.5 py-4 sm:px-5">
       {/* Toast Error Notification */}
       {toastError && (
         <div className="fixed bottom-16 right-4 z-50 max-w-sm rounded-xl border border-rose-500/50 bg-stadium-950/95 px-4 py-3 text-xs font-bold text-rose-300 shadow-2xl sm:bottom-5">
@@ -539,13 +541,13 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
       {/* ================= 2. ACTIVE / PAUSED LIVE AUCTION STATE ================= */}
       {(room.status === 'ACTIVE' || room.status === 'PAUSED') && (
         <>
-          {/* Mobile Broadcast TV Navigation Switcher (< 1024px) */}
-          <div className="sticky top-2 z-30 mb-3.5 grid grid-cols-4 gap-1.5 rounded-2xl border border-amber-400/30 bg-[#060a18]/95 p-1.5 shadow-2xl backdrop-blur-md lg:hidden">
+          {/* Mobile Navigation Switcher (< 1024px) */}
+          <div className="mb-3 grid grid-cols-4 gap-1 rounded-xl border border-white/10 bg-stadium-900 p-1 lg:hidden">
             {[
-              { id: 'stage', label: 'Arena Stage', icon: Gavel, badge: 'LIVE' },
+              { id: 'stage', label: 'Stage', icon: Gavel },
               { id: 'teams', label: '10 Teams', icon: Users },
-              { id: 'pool', label: 'Player Lists', icon: ListFilter },
-              { id: 'comms', label: 'Voice & Chat', icon: Mic },
+              { id: 'pool', label: 'Lists', icon: ListFilter },
+              { id: 'comms', label: 'Voice/Chat', icon: Mic },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = mobileTab === tab.id;
@@ -556,14 +558,14 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
                   onClick={() =>
                     setMobileTab(tab.id as 'stage' | 'teams' | 'pool' | 'comms')
                   }
-                  className={`flex flex-col sm:flex-row items-center justify-center gap-1 rounded-xl py-2 px-1 text-[11px] font-black uppercase tracking-wider transition ${
+                  className={`flex items-center justify-center gap-1 rounded-lg py-2 text-[11px] font-extrabold transition ${
                     active
-                      ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-stadium-950 shadow-lg shadow-amber-500/25 scale-[1.02]'
-                      : 'text-slate-300 hover:bg-white/5 active:scale-95'
+                      ? 'bg-amber-500 text-stadium-950'
+                      : 'text-slate-300 hover:bg-white/5'
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
-                  <span className="truncate">{tab.label}</span>
+                  <Icon className="h-3.5 w-3.5" />
+                  <span>{tab.label}</span>
                 </button>
               );
             })}
@@ -571,7 +573,12 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
 
           {/* Live Mid-Auction Ranking Modal */}
           {showLivePreviewModal && analysisReport && (
-            <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 p-3 backdrop-blur-sm sm:p-6">
+            <div
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setShowLivePreviewModal(false);
+              }}
+              className="fixed inset-0 z-50 overflow-y-auto bg-black/85 p-3 backdrop-blur-sm sm:p-6"
+            >
               <div className="mx-auto max-w-6xl">
                 <AnalysisDashboard
                   report={analysisReport}
@@ -583,6 +590,49 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
             </div>
           )}
 
+          {/* Mobile Floating Live Auction Quick-Action Bar (Shown on 10 Teams, Lists, Voice/Chat when auction is live) */}
+          {mobileTab !== 'stage' &&
+            (room.status === 'ACTIVE' || room.status === 'PAUSED') &&
+            room.currentLot && (
+              <div className="sticky top-16 z-20 mb-3 flex items-center justify-between rounded-2xl border-2 border-amber-400/60 bg-gradient-to-r from-[#0e162e] via-[#091024] to-[#040817] p-2.5 shadow-2xl backdrop-blur-md lg:hidden">
+                <div
+                  className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer"
+                  onClick={() => setMobileTab('stage')}
+                >
+                  <div className="relative shrink-0">
+                    <PlayerHeadshot player={room.currentLot.player} size="sm" showBadge />
+                    <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1 text-[10px] text-amber-400 font-black uppercase tracking-wider">
+                      <span>🔴 LOT #{room.currentLot.lotNumber} LIVE</span>
+                      <span>•</span>
+                      <span className="font-mono text-white">
+                        {formatLakhs(
+                          room.currentLot.currentBidLakhs ?? room.currentLot.basePriceLakhs
+                        )}
+                      </span>
+                    </div>
+                    <div className="truncate font-display text-xs font-black uppercase text-white">
+                      {room.currentLot.player.name}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileTab('stage')}
+                  className="btn-sports-paddle shrink-0 flex items-center gap-1.5 rounded-xl px-3.5 py-2 font-display text-xs font-black uppercase tracking-wider text-stadium-950 shadow-lg active:scale-95"
+                >
+                  <Gavel className="h-3.5 w-3.5" />
+                  <span>BID NOW ⚡</span>
+                </button>
+              </div>
+            )}
+
           <div className="grid gap-4 lg:grid-cols-12">
             {/* Left Column: 10 Franchises Live Purse & Squads */}
             <div
@@ -590,7 +640,11 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
                 mobileTab === 'teams' ? 'block' : 'hidden'
               } lg:col-span-3 lg:block`}
             >
-              <TeamsOverviewPanel room={room} currentUserId={user.id} />
+              <TeamsOverviewPanel
+                room={room}
+                currentUserId={user.id}
+                onGoToStage={() => setMobileTab('stage')}
+              />
             </div>
 
             {/* Center Column: Auction Stage + Player Lists */}

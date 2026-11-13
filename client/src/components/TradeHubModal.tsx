@@ -260,7 +260,12 @@ export const TradeHubModal: React.FC<TradeHubModalProps> = ({
   const timeFormatted = `${String(timerMin).padStart(2, '0')}:${String(timerSec).padStart(2, '0')}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 backdrop-blur-md">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 backdrop-blur-md"
+    >
       <div className="relative flex h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-white/20 bg-stadium-950 shadow-2xl">
         {/* Top Header Bar */}
         <div className="flex flex-wrap items-center justify-between border-b border-white/10 bg-stadium-900/90 px-6 py-4">

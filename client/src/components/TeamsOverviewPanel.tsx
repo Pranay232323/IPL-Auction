@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Bot, X, Users, Download } from 'lucide-react';
+import { Bot, X, Users, Download, Gavel } from 'lucide-react';
 import { apiRequest } from '../api/http';
 import { RoomLotItem, RoomSnapshot, TeamCode } from '../types';
 import { formatLakhs, roleBadgeClasses } from '../utils/format';
@@ -10,11 +10,13 @@ import { SquadPosterModal } from './SquadPosterModal';
 interface TeamsOverviewPanelProps {
   room: RoomSnapshot;
   currentUserId: string;
+  onGoToStage?: () => void;
 }
 
 export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = React.memo(({
   room,
   currentUserId,
+  onGoToStage,
 }) => {
   const [inspectTeam, setInspectTeam] = useState<TeamCode | null>(null);
   const [teamSquad, setTeamSquad] = useState<RoomLotItem[]>([]);
@@ -116,44 +118,85 @@ export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = React.memo(
 
       {/* Squad Depth Chart Modal */}
       {inspectTeam && inspectedMeta && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-3 backdrop-blur-sm">
-          <div className="flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-white/15 bg-stadium-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 bg-stadium-950 px-5 py-3.5">
-              <div className="flex items-center gap-3">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setInspectTeam(null);
+              setShowPoster(false);
+            }
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-5 backdrop-blur-sm"
+        >
+          <div className="flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-white/20 bg-stadium-900 shadow-2xl">
+            {/* Live Auction Alert Bar inside modal if auction is currently live */}
+            {room.status === 'ACTIVE' && room.currentLot && (
+              <div className="flex items-center justify-between border-b border-amber-500/40 bg-gradient-to-r from-amber-500/25 via-amber-500/15 to-transparent px-4 py-2.5 text-xs">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="h-2 w-2 rounded-full bg-red-500 animate-ping shrink-0" />
+                  <span className="font-black uppercase tracking-wider text-amber-300 truncate">
+                    🔴 Live Lot #{room.currentLot.lotNumber}: {room.currentLot.player.name}
+                  </span>
+                  <span className="font-mono font-bold text-white shrink-0">
+                    ({formatLakhs(room.currentLot.currentBidLakhs ?? room.currentLot.basePriceLakhs)})
+                  </span>
+                </div>
+                {onGoToStage && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setInspectTeam(null);
+                      setShowPoster(false);
+                      onGoToStage();
+                    }}
+                    className="btn-sports-paddle shrink-0 flex items-center gap-1 rounded-lg px-3 py-1 font-display text-[11px] font-black uppercase text-stadium-950 shadow-md active:scale-95"
+                  >
+                    <Gavel className="h-3.5 w-3.5" />
+                    <span>Bid Now ⚡</span>
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-white/10 bg-stadium-950 px-4 py-3.5 sm:px-5">
+              <div className="flex items-center gap-3 min-w-0">
                 <FranchiseLogo teamCode={inspectedMeta.teamCode} size="md" />
-                <div>
-                  <h3 className="text-base font-extrabold text-white">
+                <div className="min-w-0">
+                  <h3 className="text-base font-extrabold text-white truncate">
                     {inspectedMeta.teamName} Squad ({inspectedMeta.squadCount}/25)
                   </h3>
-                  <p className="text-xs text-slate-400">
-                    Owner: <strong className="text-slate-200">{inspectedMeta.ownerName || 'None'}</strong> • Purse Left:{' '}
+                  <p className="text-xs text-slate-400 truncate">
+                    Owner: <strong className="text-slate-200">{inspectedMeta.ownerName || 'None'}</strong> • Purse:{' '}
                     <strong className="text-amber-300">
                       {formatLakhs(inspectedMeta.purseRemainingLakhs)}
                     </strong>{' '}
-                    • Overseas: <strong className="text-sky-300">{inspectedMeta.overseasCount}/8</strong>
+                    • OS: <strong className="text-sky-300">{inspectedMeta.overseasCount}/8</strong>
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 {teamSquad.length > 0 && (
                   <button
                     type="button"
                     onClick={() => setShowPoster(true)}
-                    className="flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-bold text-amber-300 transition hover:bg-amber-500/25"
+                    className="flex items-center gap-1.5 rounded-xl border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-bold text-amber-300 transition hover:bg-amber-500/25 active:scale-95"
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span className="hidden sm:inline">Poster & Export</span>
                   </button>
                 )}
                 <button
+                  type="button"
                   onClick={() => {
                     setInspectTeam(null);
                     setShowPoster(false);
                   }}
-                  className="rounded-lg border border-white/10 bg-white/5 p-2 text-slate-300 hover:bg-white/10"
+                  className="flex items-center gap-1 rounded-xl border border-white/15 bg-white/10 p-2 sm:px-3 text-xs font-bold text-white hover:bg-white/20 active:scale-95"
+                  title="Close Squad Roster"
                 >
                   <X className="h-4 w-4" />
+                  <span className="hidden sm:inline">Close</span>
                 </button>
               </div>
             </div>
@@ -218,6 +261,36 @@ export const TeamsOverviewPanel: React.FC<TeamsOverviewPanelProps> = React.memo(
                     </div>
                   ))}
                 </div>
+              )}
+            </div>
+
+            {/* Modal Bottom Footer: Prominent Close and Return to Auction Buttons */}
+            <div className="flex items-center justify-between border-t border-white/10 bg-stadium-950 px-4 py-3 sm:px-5">
+              <button
+                type="button"
+                onClick={() => {
+                  setInspectTeam(null);
+                  setShowPoster(false);
+                }}
+                className="flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-xs font-bold text-slate-200 hover:bg-white/20 active:scale-95 transition"
+              >
+                <X className="h-4 w-4" />
+                <span>Close Roster</span>
+              </button>
+
+              {room.status === 'ACTIVE' && onGoToStage && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setInspectTeam(null);
+                    setShowPoster(false);
+                    onGoToStage();
+                  }}
+                  className="btn-sports-paddle flex items-center gap-2 rounded-xl px-5 py-2.5 font-display text-xs font-black uppercase tracking-wider text-stadium-950 shadow-lg active:scale-95 transition"
+                >
+                  <Gavel className="h-4 w-4" />
+                  <span>Return to Bidding Stage ⚡</span>
+                </button>
               )}
             </div>
           </div>

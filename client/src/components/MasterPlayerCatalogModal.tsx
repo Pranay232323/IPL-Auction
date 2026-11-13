@@ -70,7 +70,12 @@ export const MasterPlayerCatalogModal: React.FC<MasterPlayerCatalogModalProps> =
   const overseasCount = players.filter((p) => p.isOverseas).length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 backdrop-blur-sm sm:p-5">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 backdrop-blur-sm sm:p-5"
+    >
       <div className="flex h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-white/15 bg-stadium-900 shadow-2xl">
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-stadium-950 px-4 py-3.5 sm:px-6">

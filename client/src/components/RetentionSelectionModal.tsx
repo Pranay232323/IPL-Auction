@@ -172,7 +172,12 @@ export const RetentionSelectionModal: React.FC<RetentionSelectionModalProps> = (
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+    >
       <div className="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-white/20 bg-stadium-950 shadow-2xl">
         {/* Header accent strip */}
         <div className="h-2 w-full" style={{ backgroundColor: primaryColor }} />

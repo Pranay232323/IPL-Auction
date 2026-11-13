@@ -129,7 +129,12 @@ export const SquadPosterModal: React.FC<SquadPosterModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-2 sm:p-5 backdrop-blur-md">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-2 sm:p-5 backdrop-blur-md"
+    >
       <div className="flex max-h-[94vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-white/20 bg-stadium-950 shadow-2xl">
         {/* Top Header */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-stadium-900/90 px-5 py-3.5 sm:px-7">
