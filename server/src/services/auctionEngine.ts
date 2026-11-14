@@ -476,17 +476,17 @@ export class AuctionEngineManager {
         LIMIT 30`
       )
       .all() as {
-      id: string;
-      code: string;
-      name: string;
-      status: RoomStatus;
-      timer_seconds: number;
-      player_pool_limit: number;
-      created_at: string;
-      human_count: number;
-      bot_count: number;
-      sold_count: number;
-    }[];
+        id: string;
+        code: string;
+        name: string;
+        status: RoomStatus;
+        timer_seconds: number;
+        player_pool_limit: number;
+        created_at: string;
+        human_count: number;
+        bot_count: number;
+        sold_count: number;
+      }[];
 
     return rows.map((r) => ({
       id: r.id,
@@ -528,11 +528,11 @@ export class AuctionEngineManager {
         .prepare('SELECT * FROM room_teams WHERE room_id = ? AND team_code = ?')
         .get(room.id, params.teamCode) as
         | {
-            id: string;
-            user_id: string | null;
-            is_bot: number;
-            squad_count: number;
-          }
+          id: string;
+          user_id: string | null;
+          is_bot: number;
+          squad_count: number;
+        }
         | undefined;
 
       if (!target) {
@@ -789,13 +789,13 @@ export class AuctionEngineManager {
       .prepare('SELECT * FROM rooms WHERE id = ?')
       .get(rt.roomId) as
       | {
-          id: string;
-          code: string;
-          status: RoomStatus;
-          timer_seconds: number;
-          max_squad_size: number;
-          accelerated_mode: number;
-        }
+        id: string;
+        code: string;
+        status: RoomStatus;
+        timer_seconds: number;
+        max_squad_size: number;
+        accelerated_mode: number;
+      }
       | undefined;
 
     if (!room || room.status !== 'ACTIVE') return;
@@ -867,8 +867,7 @@ export class AuctionEngineManager {
       clearInterval(rt.tickInterval);
     }
     rt.pausedRemainingMs = null;
-    const safeDuration = Math.max(6000, durationMs || 15000);
-    rt.timerEndsAt = Date.now() + safeDuration;
+    rt.timerEndsAt = Date.now() + durationMs;
 
     rt.tickInterval = setInterval(() => {
       if (!rt.timerEndsAt || rt.isTransitioning) return;
@@ -899,15 +898,15 @@ export class AuctionEngineManager {
       .prepare('SELECT * FROM rooms WHERE code = ?')
       .get(code) as
       | {
-          id: string;
-          code: string;
-          status: RoomStatus;
-          max_squad_size: number;
-          max_overseas: number;
-          timer_seconds: number;
-          accelerated_mode: number;
-          current_lot_id: string | null;
-        }
+        id: string;
+        code: string;
+        status: RoomStatus;
+        max_squad_size: number;
+        max_overseas: number;
+        timer_seconds: number;
+        accelerated_mode: number;
+        current_lot_id: string | null;
+      }
       | undefined;
 
     if (!room) throw new AuctionEngineError('Room not found.', 404);
@@ -933,13 +932,13 @@ export class AuctionEngineManager {
         .prepare('SELECT * FROM room_teams WHERE room_id = ? AND team_code = ?')
         .get(room.id, params.teamCode) as
         | {
-            team_code: TeamCode;
-            user_id: string | null;
-            is_bot: number;
-            purse_remaining_lakhs: number;
-            squad_count: number;
-            overseas_count: number;
-          }
+          team_code: TeamCode;
+          user_id: string | null;
+          is_bot: number;
+          purse_remaining_lakhs: number;
+          squad_count: number;
+          overseas_count: number;
+        }
         | undefined;
 
       if (!team) {
@@ -965,15 +964,15 @@ export class AuctionEngineManager {
         )
         .get(room.current_lot_id) as
         | {
-            id: string;
-            player_id: number;
-            player_name: string;
-            is_overseas: number;
-            status: LotStatus;
-            base_price_lakhs: number;
-            current_bid_lakhs: number | null;
-            current_bidder_team: TeamCode | null;
-          }
+          id: string;
+          player_id: number;
+          player_name: string;
+          is_overseas: number;
+          status: LotStatus;
+          base_price_lakhs: number;
+          current_bid_lakhs: number | null;
+          current_bidder_team: TeamCode | null;
+        }
         | undefined;
 
       if (!lot || lot.status !== 'ON_BLOCK') {
@@ -1139,11 +1138,6 @@ export class AuctionEngineManager {
       const fastEnd = Date.now() + 3500;
       if (rt.timerEndsAt > fastEnd) {
         rt.timerEndsAt = fastEnd;
-        this.io?.to(this.socketRoomKey(code)).emit('auction:tick', {
-          remainingMs: Math.max(0, rt.timerEndsAt - Date.now()),
-          timerEndsAt: rt.timerEndsAt,
-          serverNow: Date.now(),
-        });
       }
     }
   }
@@ -1159,14 +1153,14 @@ export class AuctionEngineManager {
       .prepare('SELECT * FROM rooms WHERE id = ?')
       .get(rt.roomId) as
       | {
-          id: string;
-          code: string;
-          status: RoomStatus;
-          max_squad_size: number;
-          min_squad_size: number;
-          max_overseas: number;
-          current_lot_id: string | null;
-        }
+        id: string;
+        code: string;
+        status: RoomStatus;
+        max_squad_size: number;
+        min_squad_size: number;
+        max_overseas: number;
+        current_lot_id: string | null;
+      }
       | undefined;
 
     if (!room || room.status !== 'ACTIVE' || !room.current_lot_id) return;
@@ -1174,12 +1168,12 @@ export class AuctionEngineManager {
     const bots = db
       .prepare('SELECT * FROM room_teams WHERE room_id = ? AND is_bot = 1')
       .all(room.id) as {
-      team_code: TeamCode;
-      bot_strategy: BotStrategy | null;
-      purse_remaining_lakhs: number;
-      squad_count: number;
-      overseas_count: number;
-    }[];
+        team_code: TeamCode;
+        bot_strategy: BotStrategy | null;
+        purse_remaining_lakhs: number;
+        squad_count: number;
+        overseas_count: number;
+      }[];
 
     if (bots.length === 0) return;
 
@@ -1192,11 +1186,11 @@ export class AuctionEngineManager {
       )
       .get(room.current_lot_id) as
       | (PlayerRecord & {
-          lot_number: number;
-          current_bid_lakhs: number | null;
-          current_bidder_team: TeamCode | null;
-          status: LotStatus;
-        })
+        lot_number: number;
+        current_bid_lakhs: number | null;
+        current_bidder_team: TeamCode | null;
+        status: LotStatus;
+      })
       | undefined;
 
     if (!lotRow || lotRow.status !== 'ON_BLOCK') return;
@@ -1273,7 +1267,7 @@ export class AuctionEngineManager {
         safeSpendable,
         Math.round(
           bot.purse_remaining_lakhs *
-            (playerDto.overallRating >= 96 ? 0.16 : playerDto.overallRating >= 92 ? 0.13 : 0.09)
+          (playerDto.overallRating >= 96 ? 0.16 : playerDto.overallRating >= 92 ? 0.13 : 0.09)
         )
       );
       const hardRatingCeiling =
@@ -1347,12 +1341,12 @@ export class AuctionEngineManager {
       )
       .get(room.current_lot_id) as
       | (PlayerRecord & {
-          lot_id_val?: string;
-          lot_number: number;
-          current_bid_lakhs: number | null;
-          current_bidder_team: TeamCode | null;
-          status: LotStatus;
-        })
+        lot_id_val?: string;
+        lot_number: number;
+        current_bid_lakhs: number | null;
+        current_bidder_team: TeamCode | null;
+        status: LotStatus;
+      })
       | undefined;
 
     if (!lot) {
@@ -1425,13 +1419,13 @@ export class AuctionEngineManager {
       .prepare('SELECT * FROM room_teams WHERE room_id = ? AND team_code = ?')
       .get(roomId, teamCode) as
       | {
-          rtm_cards_remaining: number;
-          purse_remaining_lakhs: number;
-          squad_count: number;
-          overseas_count: number;
-          user_id: string | null;
-          is_bot: number;
-        }
+        rtm_cards_remaining: number;
+        purse_remaining_lakhs: number;
+        squad_count: number;
+        overseas_count: number;
+        user_id: string | null;
+        is_bot: number;
+      }
       | undefined;
 
     if (!team) return false;
@@ -1875,10 +1869,10 @@ export class AuctionEngineManager {
       .prepare('SELECT * FROM room_teams WHERE room_id = ? AND team_code = ?')
       .get(room.id, params.teamCode) as
       | {
-          rtm_cards_remaining: number;
-          retentions_count: number;
-          purse_remaining_lakhs: number;
-        }
+        rtm_cards_remaining: number;
+        retentions_count: number;
+        purse_remaining_lakhs: number;
+      }
       | undefined;
     if (!team) throw new AuctionEngineError('Franchise not found in room.', 404);
 
@@ -1891,12 +1885,12 @@ export class AuctionEngineManager {
          ORDER BY p.marquee DESC, p.overall_rating DESC, p.name ASC`
       )
       .all(room.id, params.teamCode) as (PlayerRecord & {
-      lot_id: string;
-      lot_status: LotStatus;
-      sold_to_team: string | null;
-      sold_price_lakhs: number | null;
-      is_retention: number;
-    })[];
+        lot_id: string;
+        lot_status: LotStatus;
+        sold_to_team: string | null;
+        sold_price_lakhs: number | null;
+        is_retention: number;
+      })[];
 
     const candidates: RetentionCandidateDTO[] = rows.map((r) => {
       const isRetained =
@@ -1930,13 +1924,13 @@ export class AuctionEngineManager {
       .prepare('SELECT id, status, initial_purse_lakhs, min_squad_size, max_overseas, host_user_id FROM rooms WHERE code = ?')
       .get(code) as
       | {
-          id: string;
-          status: RoomStatus;
-          initial_purse_lakhs: number;
-          min_squad_size: number;
-          max_overseas: number;
-          host_user_id: string;
-        }
+        id: string;
+        status: RoomStatus;
+        initial_purse_lakhs: number;
+        min_squad_size: number;
+        max_overseas: number;
+        host_user_id: string;
+      }
       | undefined;
 
     if (!room) throw new AuctionEngineError('Room not found.', 404);
@@ -1948,10 +1942,10 @@ export class AuctionEngineManager {
       .prepare('SELECT * FROM room_teams WHERE room_id = ? AND team_code = ?')
       .get(room.id, params.teamCode) as
       | {
-          user_id: string | null;
-          is_bot: number;
-          owner_name: string | null;
-        }
+        user_id: string | null;
+        is_bot: number;
+        owner_name: string | null;
+      }
       | undefined;
 
     if (!team) throw new AuctionEngineError('Franchise not found in room.', 404);
@@ -2155,12 +2149,12 @@ export class AuctionEngineManager {
       .prepare('SELECT id, host_user_id, status, timer_seconds, current_lot_id FROM rooms WHERE code = ?')
       .get(code) as
       | {
-          id: string;
-          host_user_id: string;
-          status: RoomStatus;
-          timer_seconds: number;
-          current_lot_id: string | null;
-        }
+        id: string;
+        host_user_id: string;
+        status: RoomStatus;
+        timer_seconds: number;
+        current_lot_id: string | null;
+      }
       | undefined;
 
     if (!room) throw new AuctionEngineError('Room not found.', 404);
@@ -2177,8 +2171,8 @@ export class AuctionEngineManager {
     const rt = this.getOrCreateRuntime(room.id, code);
     const currentLot = room.current_lot_id
       ? (db
-          .prepare('SELECT status FROM auction_lots WHERE id = ?')
-          .get(room.current_lot_id) as { status: LotStatus } | undefined)
+        .prepare('SELECT status FROM auction_lots WHERE id = ?')
+        .get(room.current_lot_id) as { status: LotStatus } | undefined)
       : undefined;
 
     if (rt.rtmState) {
@@ -2208,14 +2202,14 @@ export class AuctionEngineManager {
       .prepare('SELECT id, host_user_id, status, current_lot_id, max_squad_size, min_squad_size, max_overseas FROM rooms WHERE code = ?')
       .get(code) as
       | {
-          id: string;
-          host_user_id: string;
-          status: RoomStatus;
-          current_lot_id: string | null;
-          max_squad_size: number;
-          min_squad_size: number;
-          max_overseas: number;
-        }
+        id: string;
+        host_user_id: string;
+        status: RoomStatus;
+        current_lot_id: string | null;
+        max_squad_size: number;
+        min_squad_size: number;
+        max_overseas: number;
+      }
       | undefined;
 
     if (!room) throw new AuctionEngineError('Room not found.', 404);
@@ -2241,24 +2235,24 @@ export class AuctionEngineManager {
         )
         .get(actualLotId) as
         | (PlayerRecord & {
-            lot_id: string;
-            lot_number: number;
-            current_bid_lakhs: number | null;
-            current_bidder_team: TeamCode | null;
-            status: LotStatus;
-          })
+          lot_id: string;
+          lot_number: number;
+          current_bid_lakhs: number | null;
+          current_bidder_team: TeamCode | null;
+          status: LotStatus;
+        })
         | undefined;
 
       if (lotRow && lotRow.status === 'ON_BLOCK') {
         const bots = db
           .prepare('SELECT * FROM room_teams WHERE room_id = ? AND is_bot = 1')
           .all(room.id) as {
-          team_code: TeamCode;
-          bot_strategy: BotStrategy | null;
-          purse_remaining_lakhs: number;
-          squad_count: number;
-          overseas_count: number;
-        }[];
+            team_code: TeamCode;
+            bot_strategy: BotStrategy | null;
+            purse_remaining_lakhs: number;
+            squad_count: number;
+            overseas_count: number;
+          }[];
 
         if (bots.length > 0) {
           const playerDto = mapPlayerToDTO(lotRow);
@@ -2318,7 +2312,7 @@ export class AuctionEngineManager {
               safeSpendable,
               Math.round(
                 bot.purse_remaining_lakhs *
-                  (playerDto.overallRating >= 96 ? 0.16 : playerDto.overallRating >= 92 ? 0.13 : 0.09)
+                (playerDto.overallRating >= 96 ? 0.16 : playerDto.overallRating >= 92 ? 0.13 : 0.09)
               )
             );
             const hardRatingCeiling =
@@ -2397,8 +2391,7 @@ export class AuctionEngineManager {
               createdAt: nowIso,
             };
 
-            // Real-time broadcast: Bot places bid, clock shows 2.8s "Going Twice", gavel falls smoothly
-            rt.timerEndsAt = Date.now() + 2800;
+            rt.timerEndsAt = Date.now() + 450;
             const midSnapshot = this.getRoomSnapshot(code);
             this.io?.to(this.socketRoomKey(code)).emit('auction:bid_placed', {
               bid: createdBid,
@@ -2407,37 +2400,21 @@ export class AuctionEngineManager {
               serverNow: Date.now(),
               passedTeams: [],
             });
-            this.io?.to(this.socketRoomKey(code)).emit('auction:tick', {
-              remainingMs: 2800,
-              timerEndsAt: rt.timerEndsAt,
-              serverNow: Date.now(),
-            });
             this.broadcastRoomState(code, midSnapshot);
 
-            // Smooth 2.8s televised countdown so players see the bid land, hear the call, and watch the gavel fall!
+            // Brief 350ms delay so players see the bid hit the board and hear the blip before gavel falls!
             setTimeout(() => {
               rt.isTransitioning = false;
               this.finalizeCurrentLot(rt);
-            }, 2800);
+            }, 350);
             return;
           }
         }
       }
     }
 
-    // If no bots want to bid or lot already has a standing bid, don't abruptly vanish in 0ms!
-    // Give a clear 2.0s countdown with "Going Twice... Hammer Falling!" broadcast tape!
-    rt.timerEndsAt = Date.now() + 2200;
-    this.io?.to(this.socketRoomKey(code)).emit('auction:tick', {
-      remainingMs: 2200,
-      timerEndsAt: rt.timerEndsAt,
-      serverNow: Date.now(),
-    });
-
-    setTimeout(() => {
-      rt.isTransitioning = false;
-      this.finalizeCurrentLot(rt);
-    }, 2200);
+    rt.isTransitioning = false;
+    this.finalizeCurrentLot(rt);
   }
 
   toggleAcceleratedMode(params: {
@@ -2752,18 +2729,18 @@ export class AuctionEngineManager {
          ORDER BY l.lot_number ASC`
       )
       .all(...queryParams) as (PlayerRecord & {
-      lot_id: string;
-      lot_number: number;
-      set_name: string;
-      lot_status: LotStatus;
-      lot_base_price: number;
-      current_bid_lakhs: number | null;
-      current_bidder_team: TeamCode | null;
-      sold_to_team: TeamCode | null;
-      sold_price_lakhs: number | null;
-      is_retention?: number;
-      is_rtm_buy?: number;
-    })[];
+        lot_id: string;
+        lot_number: number;
+        set_name: string;
+        lot_status: LotStatus;
+        lot_base_price: number;
+        current_bid_lakhs: number | null;
+        current_bidder_team: TeamCode | null;
+        sold_to_team: TeamCode | null;
+        sold_price_lakhs: number | null;
+        is_retention?: number;
+        is_rtm_buy?: number;
+      })[];
 
     return rows.map((r) => ({
       lotId: r.lot_id,
@@ -2798,17 +2775,17 @@ export class AuctionEngineManager {
          ORDER BY created_at DESC`
       )
       .all(room.id) as {
-      id: string;
-      room_id: string;
-      proposer_team: TeamCode;
-      receiver_team: TeamCode;
-      offered_player_ids: string;
-      requested_player_ids: string;
-      purse_transfer_lakhs: number;
-      status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
-      created_at: string;
-      updated_at: string;
-    }[];
+        id: string;
+        room_id: string;
+        proposer_team: TeamCode;
+        receiver_team: TeamCode;
+        offered_player_ids: string;
+        requested_player_ids: string;
+        purse_transfer_lakhs: number;
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        created_at: string;
+        updated_at: string;
+      }[];
 
     if (rows.length === 0) return [];
 
@@ -2818,10 +2795,10 @@ export class AuctionEngineManager {
       let requested: number[] = [];
       try {
         offered = JSON.parse(r.offered_player_ids);
-      } catch {}
+      } catch { }
       try {
         requested = JSON.parse(r.requested_player_ids);
-      } catch {}
+      } catch { }
       offered.forEach((id) => allPlayerIds.add(id));
       requested.forEach((id) => allPlayerIds.add(id));
       return { ...r, offered, requested };
@@ -2868,14 +2845,14 @@ export class AuctionEngineManager {
       .prepare('SELECT * FROM rooms WHERE code = ?')
       .get(code) as
       | {
-          id: string;
-          code: string;
-          status: RoomStatus;
-          trade_window_active: number;
-          trade_window_ends_at: number | null;
-          max_squad_size: number;
-          max_overseas: number;
-        }
+        id: string;
+        code: string;
+        status: RoomStatus;
+        trade_window_active: number;
+        trade_window_ends_at: number | null;
+        max_squad_size: number;
+        max_overseas: number;
+      }
       | undefined;
 
     if (!room) {
@@ -2999,18 +2976,18 @@ export class AuctionEngineManager {
 
     const offeredOverseas = offeredIds.length
       ? (db
-          .prepare(
-            `SELECT COUNT(*) as c FROM players WHERE id IN (${offeredIds.map(() => '?').join(',')}) AND is_overseas = 1`
-          )
-          .get(...offeredIds) as { c: number })?.c || 0
+        .prepare(
+          `SELECT COUNT(*) as c FROM players WHERE id IN (${offeredIds.map(() => '?').join(',')}) AND is_overseas = 1`
+        )
+        .get(...offeredIds) as { c: number })?.c || 0
       : 0;
 
     const requestedOverseas = requestedIds.length
       ? (db
-          .prepare(
-            `SELECT COUNT(*) as c FROM players WHERE id IN (${requestedIds.map(() => '?').join(',')}) AND is_overseas = 1`
-          )
-          .get(...requestedIds) as { c: number })?.c || 0
+        .prepare(
+          `SELECT COUNT(*) as c FROM players WHERE id IN (${requestedIds.map(() => '?').join(',')}) AND is_overseas = 1`
+        )
+        .get(...requestedIds) as { c: number })?.c || 0
       : 0;
 
     const proposerCurrentOverseas = proposerLots.filter((p) => p.is_overseas === 1).length;
@@ -3049,15 +3026,15 @@ export class AuctionEngineManager {
 
     const offeredNames = offeredIds.length
       ? (db
-          .prepare(`SELECT name FROM players WHERE id IN (${offeredIds.map(() => '?').join(',')})`)
-          .all(...offeredIds) as { name: string }[])
-          .map((p) => p.name)
+        .prepare(`SELECT name FROM players WHERE id IN (${offeredIds.map(() => '?').join(',')})`)
+        .all(...offeredIds) as { name: string }[])
+        .map((p) => p.name)
       : [];
     const requestedNames = requestedIds.length
       ? (db
-          .prepare(`SELECT name FROM players WHERE id IN (${requestedIds.map(() => '?').join(',')})`)
-          .all(...requestedIds) as { name: string }[])
-          .map((p) => p.name)
+        .prepare(`SELECT name FROM players WHERE id IN (${requestedIds.map(() => '?').join(',')})`)
+        .all(...requestedIds) as { name: string }[])
+        .map((p) => p.name)
       : [];
 
     let tradeSummary = `🤝 TRADE OFFER: ${proposerTeam} offered `;
@@ -3105,15 +3082,15 @@ export class AuctionEngineManager {
       .prepare('SELECT * FROM room_trades WHERE id = ? AND room_id = ?')
       .get(params.tradeId, room.id) as
       | {
-          id: string;
-          room_id: string;
-          proposer_team: TeamCode;
-          receiver_team: TeamCode;
-          offered_player_ids: string;
-          requested_player_ids: string;
-          purse_transfer_lakhs: number;
-          status: string;
-        }
+        id: string;
+        room_id: string;
+        proposer_team: TeamCode;
+        receiver_team: TeamCode;
+        offered_player_ids: string;
+        requested_player_ids: string;
+        purse_transfer_lakhs: number;
+        status: string;
+      }
       | undefined;
 
     if (!tradeRow) {
@@ -3246,8 +3223,8 @@ export class AuctionEngineManager {
       for (const pt of pendingTrades) {
         let pOffered: number[] = [];
         let pRequested: number[] = [];
-        try { pOffered = JSON.parse(pt.offered_player_ids); } catch {}
-        try { pRequested = JSON.parse(pt.requested_player_ids); } catch {}
+        try { pOffered = JSON.parse(pt.offered_player_ids); } catch { }
+        try { pRequested = JSON.parse(pt.requested_player_ids); } catch { }
         const ptPlayers = new Set([...pOffered, ...pRequested]);
         const conflict = allTraded.some((id) => ptPlayers.has(id));
         if (conflict) {
@@ -3375,14 +3352,14 @@ export class AuctionEngineManager {
     const db = getDb();
     const trade = db.prepare('SELECT * FROM room_trades WHERE id = ? AND room_id = ?').get(tradeId, roomId) as
       | {
-          id: string;
-          proposer_team: TeamCode;
-          receiver_team: TeamCode;
-          offered_player_ids: string;
-          requested_player_ids: string;
-          purse_transfer_lakhs: number;
-          status: string;
-        }
+        id: string;
+        proposer_team: TeamCode;
+        receiver_team: TeamCode;
+        offered_player_ids: string;
+        requested_player_ids: string;
+        purse_transfer_lakhs: number;
+        status: string;
+      }
       | undefined;
 
     if (!trade || trade.status !== 'PENDING') return;
@@ -3430,23 +3407,23 @@ export class AuctionEngineManager {
       .prepare('SELECT * FROM rooms WHERE code = ?')
       .get(code) as
       | {
-          id: string;
-          code: string;
-          name: string;
-          host_user_id: string;
-          status: RoomStatus;
-          visibility: RoomVisibility;
-          initial_purse_lakhs: number;
-          max_squad_size: number;
-          min_squad_size: number;
-          max_overseas: number;
-          timer_seconds: number;
-          current_lot_id: string | null;
-          auction_round: number;
-          accelerated_mode: number;
-          trade_window_active: number;
-          trade_window_ends_at: number | null;
-        }
+        id: string;
+        code: string;
+        name: string;
+        host_user_id: string;
+        status: RoomStatus;
+        visibility: RoomVisibility;
+        initial_purse_lakhs: number;
+        max_squad_size: number;
+        min_squad_size: number;
+        max_overseas: number;
+        timer_seconds: number;
+        current_lot_id: string | null;
+        auction_round: number;
+        accelerated_mode: number;
+        trade_window_active: number;
+        trade_window_ends_at: number | null;
+      }
       | undefined;
 
     if (!room) {
@@ -3465,11 +3442,11 @@ export class AuctionEngineManager {
          FROM auction_lots WHERE room_id = ?`
       )
       .get(room.id) as {
-      total: number;
-      upcoming: number;
-      sold: number;
-      unsold: number;
-    };
+        total: number;
+        upcoming: number;
+        sold: number;
+        unsold: number;
+      };
 
     const roleRows = db
       .prepare(
@@ -3491,19 +3468,19 @@ export class AuctionEngineManager {
     const teamRows = db
       .prepare('SELECT * FROM room_teams WHERE room_id = ?')
       .all(room.id) as {
-      team_code: TeamCode;
-      user_id: string | null;
-      owner_name: string | null;
-      is_bot: number;
-      bot_strategy: BotStrategy | null;
-      purse_remaining_lakhs: number;
-      squad_count: number;
-      overseas_count: number;
-      rtm_cards_remaining: number;
-      retentions_count: number;
-      is_ready: number;
-      is_connected: number;
-    }[];
+        team_code: TeamCode;
+        user_id: string | null;
+        owner_name: string | null;
+        is_bot: number;
+        bot_strategy: BotStrategy | null;
+        purse_remaining_lakhs: number;
+        squad_count: number;
+        overseas_count: number;
+        rtm_cards_remaining: number;
+        retentions_count: number;
+        is_ready: number;
+        is_connected: number;
+      }[];
 
     const teamMap = new Map(teamRows.map((t) => [t.team_code, t]));
 
@@ -3545,18 +3522,18 @@ export class AuctionEngineManager {
         )
         .get(room.current_lot_id) as
         | (PlayerRecord & {
-            lot_id: string;
-            lot_number: number;
-            set_name: string;
-            lot_status: LotStatus;
-            lot_base_price: number;
-            current_bid_lakhs: number | null;
-            current_bidder_team: TeamCode | null;
-            sold_to_team: TeamCode | null;
-            sold_price_lakhs: number | null;
-            is_retention?: number;
-            is_rtm_buy?: number;
-          })
+          lot_id: string;
+          lot_number: number;
+          set_name: string;
+          lot_status: LotStatus;
+          lot_base_price: number;
+          current_bid_lakhs: number | null;
+          current_bidder_team: TeamCode | null;
+          sold_to_team: TeamCode | null;
+          sold_price_lakhs: number | null;
+          is_retention?: number;
+          is_rtm_buy?: number;
+        })
         | undefined;
 
       if (lotRow) {
@@ -3594,14 +3571,14 @@ export class AuctionEngineManager {
          LIMIT 30`
       )
       .all(room.id) as {
-      id: string;
-      lot_id: string;
-      player_id: number;
-      player_name: string;
-      team_code: TeamCode;
-      amount_lakhs: number;
-      created_at: string;
-    }[];
+        id: string;
+        lot_id: string;
+        player_id: number;
+        player_name: string;
+        team_code: TeamCode;
+        amount_lakhs: number;
+        created_at: string;
+      }[];
 
     const recentChatRows = db
       .prepare(
@@ -3612,15 +3589,15 @@ export class AuctionEngineManager {
          LIMIT 60`
       )
       .all(room.id) as {
-      id: string;
-      room_id: string;
-      user_id: string | null;
-      sender_name: string;
-      team_code: TeamCode | null;
-      message_type: 'USER' | 'SYSTEM';
-      content: string;
-      created_at: string;
-    }[];
+        id: string;
+        room_id: string;
+        user_id: string | null;
+        sender_name: string;
+        team_code: TeamCode | null;
+        message_type: 'USER' | 'SYSTEM';
+        content: string;
+        created_at: string;
+      }[];
 
     return {
       id: room.id,
