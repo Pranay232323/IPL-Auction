@@ -99,11 +99,11 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
           </div>
 
           {/* Quick Actions Bar */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3">
             {/* Copy Room Code Button */}
             <button
               onClick={copyCode}
-              className="flex items-center gap-2.5 rounded-2xl border border-amber-500/40 bg-amber-500/15 px-4 py-2.5 text-xs font-black text-amber-300 shadow-md shadow-amber-500/10 transition hover:bg-amber-500/25 active:scale-95"
+              className="flex items-center justify-center gap-2.5 rounded-2xl border border-amber-500/40 bg-amber-500/15 px-4 py-2.5 text-xs font-black text-amber-300 shadow-md shadow-amber-500/10 transition hover:bg-amber-500/25 active:scale-95"
               title="Click to copy room invite code"
             >
               <span className="text-[10px] uppercase text-slate-300">Room Code:</span>
@@ -121,7 +121,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
               <>
                 <button
                   onClick={() => setRetentionTeam(myTeam.teamCode)}
-                  className="flex items-center gap-2 rounded-2xl border border-amber-400/40 bg-gradient-to-r from-amber-500/20 to-amber-500/10 px-4 py-2.5 text-xs font-black text-amber-300 transition hover:bg-amber-500/30 shadow-md shadow-amber-500/10"
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-amber-400/40 bg-gradient-to-r from-amber-500/20 to-amber-500/10 px-4 py-2.5 text-xs font-black text-amber-300 transition hover:bg-amber-500/30 shadow-md shadow-amber-500/10 active:scale-95"
                 >
                   <Star className="h-4 w-4 fill-current text-amber-400" />
                   <span>⭐ Retentions & RTM ({myTeam.retentionsCount}/5)</span>
@@ -129,7 +129,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
 
                 <button
                   onClick={() => onToggleReady(!myTeam.isReady)}
-                  className={`flex items-center gap-2 rounded-2xl border px-4 py-2.5 text-xs font-black transition ${
+                  className={`flex items-center justify-center gap-2 rounded-2xl border px-4 py-2.5 text-xs font-black transition active:scale-95 ${
                     myTeam.isReady
                       ? 'border-emerald-500/60 bg-emerald-500/25 text-emerald-300 shadow-lg shadow-emerald-500/20'
                       : 'border-white/20 bg-white/10 text-slate-200 hover:bg-white/15'
@@ -145,7 +145,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
               <button
                 onClick={onStartAuction}
                 disabled={activeCount < 2}
-                className="flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 px-6 py-3 text-sm font-black text-stadium-950 shadow-xl shadow-amber-500/25 transition hover:brightness-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 px-6 py-3 text-sm font-black text-stadium-950 shadow-xl shadow-amber-500/25 transition hover:brightness-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Play className="h-4 w-4 fill-current" />
                 <span>START MEGA AUCTION ({activeCount}/10)</span>

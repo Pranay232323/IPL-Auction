@@ -333,15 +333,38 @@ export class AuctionEngineManager {
         ? params.preferredTeam
         : 'CSK';
 
-    const players = db
-      .prepare('SELECT id, auction_set, base_price_lakhs FROM players ORDER BY set_order ASC, overall_rating DESC, id ASC')
-      .all() as { id: number; auction_set: string; base_price_lakhs: number }[];
+    const rawPlayers = db
+      .prepare(
+        'SELECT id, auction_set, set_order, base_price_lakhs FROM players ORDER BY set_order ASC'
+      )
+      .all() as { id: number; auction_set: string; set_order: number; base_price_lakhs: number }[];
 
-    if (players.length === 0) {
+    if (rawPlayers.length === 0) {
       throw new AuctionEngineError(
         'Player catalog is empty. Run database seed first.',
         500
       );
+    }
+
+    // Preserve authentic IPL set progression (M1 -> M2 -> BA1 -> AL1 -> WK1 -> FA1 -> SP1 -> ...),
+    // but randomize the presentation order of players WITHIN each set/slot so lots do not follow a predictable sequence.
+    const setGroups = new Map<number, typeof rawPlayers>();
+    for (const p of rawPlayers) {
+      const group = setGroups.get(p.set_order) || [];
+      group.push(p);
+      setGroups.set(p.set_order, group);
+    }
+
+    const players: typeof rawPlayers = [];
+    const sortedSetOrders = Array.from(setGroups.keys()).sort((a, b) => a - b);
+    for (const sOrder of sortedSetOrders) {
+      const group = setGroups.get(sOrder)!;
+      // In-place Fisher-Yates random shuffle within the set
+      for (let i = group.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [group[i], group[j]] = [group[j], group[i]];
+      }
+      players.push(...group);
     }
 
     const createTx = db.transaction(() => {
@@ -2472,11 +2495,28 @@ export class AuctionEngineManager {
     }
 
     const nextRound = room.auction_round + 1;
-    db.prepare(
+
+    // Randomize unsold lots presentation order for the accelerated round
+    const shuffledUnsold = [...unsoldLots];
+    for (let i = shuffledUnsold.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledUnsold[i], shuffledUnsold[j]] = [shuffledUnsold[j], shuffledUnsold[i]];
+    }
+
+    const maxLotRow = db
+      .prepare('SELECT MAX(lot_number) as max_lot FROM auction_lots WHERE room_id = ?')
+      .get(room.id) as { max_lot: number | null } | undefined;
+    let nextLotNum = (maxLotRow?.max_lot || 0) + 1;
+
+    const updateLot = db.prepare(
       `UPDATE auction_lots
-       SET status = 'UPCOMING', round_offered = ?, current_bid_lakhs = NULL, current_bidder_team = NULL
-       WHERE room_id = ? AND status = 'UNSOLD'`
-    ).run(nextRound, room.id);
+       SET status = 'UPCOMING', round_offered = ?, lot_number = ?, current_bid_lakhs = NULL, current_bidder_team = NULL, updated_at = datetime('now')
+       WHERE id = ?`
+    );
+
+    for (const lot of shuffledUnsold) {
+      updateLot.run(nextRound, nextLotNum++, lot.id);
+    }
 
     db.prepare(
       `UPDATE rooms SET status = 'ACTIVE', auction_round = ?, accelerated_mode = 1 WHERE id = ?`

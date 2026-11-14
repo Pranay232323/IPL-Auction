@@ -733,7 +733,7 @@ export const VoiceAndChatPanel: React.FC<VoiceAndChatPanelProps> = React.memo(({
                 onChange={(e) => setDraft(e.target.value)}
                 maxLength={280}
                 placeholder="Trash talk or discuss bids..."
-                className="flex-1 rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                className="flex-1 rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-base sm:text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
               />
               <button
                 type="submit"

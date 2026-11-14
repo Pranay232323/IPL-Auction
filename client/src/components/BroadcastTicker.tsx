@@ -61,7 +61,7 @@ export const BroadcastTicker: React.FC<BroadcastTickerProps> = React.memo(({
   const currentItem = allItems[tickerIndex] || allItems[0];
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 flex h-9 items-center border-t border-amber-400/40 bg-gradient-to-r from-[#030611] via-[#09112a] to-[#030611] px-3 shadow-[0_-8px_25px_rgba(0,0,0,0.8)] backdrop-blur-md">
+    <div className="fixed inset-x-0 bottom-0 z-50 flex h-9 items-center overflow-hidden border-t border-amber-400/40 bg-gradient-to-r from-[#030611] via-[#09112a] to-[#030611] px-3 shadow-[0_-8px_25px_rgba(0,0,0,0.8)] backdrop-blur-md">
       {/* Left Star Sports TV Badge */}
       <div className="flex shrink-0 items-center gap-2 border-r border-amber-400/30 pr-3 sm:pr-4">
         <span className="flex h-2 w-2 rounded-full bg-red-500 animate-ping" />

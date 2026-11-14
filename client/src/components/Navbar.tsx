@@ -92,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-display text-base font-black tracking-wide text-white sm:text-lg">
+                <span className="font-display text-sm sm:text-base lg:text-lg font-black tracking-wide text-white truncate max-w-[130px] sm:max-w-none">
                   IPL MEGA AUCTION
                 </span>
                 <span className="hidden rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-300 border border-amber-500/40 md:inline-block">
@@ -178,7 +178,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   {user.displayName.slice(0, 1).toUpperCase()}
                 </div>
-                <div className="max-w-[100px] truncate text-xs font-semibold text-slate-200 sm:max-w-[140px]">
+                <div className="max-w-[70px] sm:max-w-[140px] truncate text-xs font-semibold text-slate-200">
                   {user.displayName}
                 </div>
                 <button

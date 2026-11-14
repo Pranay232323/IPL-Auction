@@ -202,7 +202,7 @@ export const AuthScreen: React.FC = () => {
                     onChange={(e) => setGuestName(e.target.value)}
                     placeholder="e.g. Akash Ambani / Captain Cool"
                     maxLength={28}
-                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 text-base sm:text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
                   />
                   <p className="mt-1.5 text-[11px] text-slate-400">
                     Jump straight into a live 10-player auction room for free with persistent JWT session.
@@ -232,7 +232,7 @@ export const AuthScreen: React.FC = () => {
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     placeholder="username or you@example.com"
-                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 text-base sm:text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -245,7 +245,7 @@ export const AuthScreen: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 text-base sm:text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
                   />
                 </div>
                 <button
@@ -273,7 +273,7 @@ export const AuthScreen: React.FC = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       placeholder="virat_18"
-                      className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                      className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-base sm:text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -285,7 +285,7 @@ export const AuthScreen: React.FC = () => {
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
                       placeholder="King Kohli"
-                      className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                      className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-base sm:text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -299,7 +299,7 @@ export const AuthScreen: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="owner@iplfranchise.com"
-                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-base sm:text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -313,7 +313,7 @@ export const AuthScreen: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2 text-base sm:text-sm text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
                   />
                 </div>
                 <button

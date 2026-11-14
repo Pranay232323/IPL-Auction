@@ -558,12 +558,12 @@ export const RoomArenaPage: React.FC<RoomArenaPageProps> = ({
                   onClick={() =>
                     setMobileTab(tab.id as 'stage' | 'teams' | 'pool' | 'comms')
                   }
-                  className={`flex items-center justify-center gap-1 rounded-lg py-2 text-[11px] font-extrabold transition ${active
-                    ? 'bg-amber-500 text-stadium-950'
+                  className={`flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-black transition active:scale-95 ${active
+                    ? 'bg-amber-500 text-stadium-950 shadow-md shadow-amber-500/20'
                     : 'text-slate-300 hover:bg-white/5'
                     }`}
                 >
-                  <Icon className="h-3.5 w-3.5" />
+                  <Icon className="h-4 w-4" />
                   <span>{tab.label}</span>
                 </button>
               );

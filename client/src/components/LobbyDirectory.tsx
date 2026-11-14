@@ -134,7 +134,7 @@ export const LobbyDirectory: React.FC<LobbyDirectoryProps> = ({
                   maxLength={48}
                   value={roomName}
                   onChange={(e) => setRoomName(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 text-sm text-white focus:border-amber-400 focus:outline-none"
+                  className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 text-base sm:text-sm text-white focus:border-amber-400 focus:outline-none"
                 />
               </div>
 
@@ -146,7 +146,7 @@ export const LobbyDirectory: React.FC<LobbyDirectoryProps> = ({
                   <select
                     value={preferredTeam}
                     onChange={(e) => setPreferredTeam(e.target.value as TeamCode)}
-                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2.5 text-sm font-semibold text-white focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2.5 text-base sm:text-sm font-semibold text-white focus:border-amber-400 focus:outline-none"
                   >
                     {FRANCHISES.map((f) => (
                       <option key={f.code} value={f.code}>
@@ -163,7 +163,7 @@ export const LobbyDirectory: React.FC<LobbyDirectoryProps> = ({
                   <select
                     value={timerSeconds}
                     onChange={(e) => setTimerSeconds(Number(e.target.value))}
-                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2.5 text-sm font-semibold text-white focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl border border-white/15 bg-stadium-950 px-3 py-2.5 text-base sm:text-sm font-semibold text-white focus:border-amber-400 focus:outline-none"
                   >
                     <option value={10}>10 Seconds (Fast)</option>
                     <option value={15}>15 Seconds (Standard)</option>
@@ -239,7 +239,7 @@ export const LobbyDirectory: React.FC<LobbyDirectoryProps> = ({
                 onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                 placeholder="ENTER CODE (e.g. IPL9X4)"
                 maxLength={8}
-                className="flex-1 rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 font-mono text-sm font-bold uppercase tracking-widest text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
+                className="flex-1 rounded-xl border border-white/15 bg-stadium-950 px-3.5 py-2.5 font-mono text-base sm:text-sm font-bold uppercase tracking-widest text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
               />
               <button
                 type="submit"

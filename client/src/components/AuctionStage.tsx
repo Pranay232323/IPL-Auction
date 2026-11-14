@@ -705,7 +705,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = React.memo(({
                   type="button"
                   disabled={!canBid || !myTeam}
                   onClick={() => myTeam && onBid(myTeam.teamCode)}
-                  className={`mt-2.5 btn-sports-paddle flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 font-display text-lg font-black uppercase tracking-wider transition ${
+                  className={`mt-2.5 btn-sports-paddle flex min-h-[54px] w-full items-center justify-center gap-2 rounded-2xl py-3.5 font-display text-lg font-black uppercase tracking-wider transition ${
                     canBid
                       ? 'text-stadium-950 shadow-xl cursor-pointer active:scale-98'
                       : 'cursor-not-allowed opacity-50 border border-white/10 bg-white/5 text-slate-400'
@@ -733,7 +733,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = React.memo(({
                           type="button"
                           disabled={!jumpAffordable}
                           onClick={() => onBid(myTeam.teamCode, jumpTarget)}
-                          className="rounded-lg border border-white/10 bg-white/5 py-1.5 font-mono text-[11px] font-bold text-slate-200 transition hover:border-amber-400 hover:bg-amber-500/15 hover:text-amber-300 disabled:opacity-35"
+                          className="flex min-h-[40px] items-center justify-center rounded-lg border border-white/10 bg-white/5 py-1.5 font-mono text-[11px] font-bold text-slate-200 transition hover:border-amber-400 hover:bg-amber-500/15 hover:text-amber-300 disabled:opacity-35 active:scale-95"
                           title={`Jump Bid directly to ${formatLakhs(jumpTarget)}`}
                         >
                           +{jump === 100 ? '1Cr' : `${jump}L`}
@@ -745,7 +745,7 @@ export const AuctionStage: React.FC<AuctionStageProps> = React.memo(({
                       type="button"
                       disabled={isLeadingBidder || hasPassed || room.status !== 'ACTIVE'}
                       onClick={onPass}
-                      className={`flex items-center justify-center gap-1 rounded-lg border py-1.5 text-[11px] font-bold transition ${
+                      className={`flex min-h-[40px] items-center justify-center gap-1 rounded-lg border py-1.5 text-[11px] font-bold transition active:scale-95 ${
                         hasPassed
                           ? 'border-rose-500/40 bg-rose-500/20 text-rose-300'
                           : 'border-white/10 bg-white/5 text-slate-300 hover:bg-rose-500/15 hover:text-rose-300 disabled:opacity-35'

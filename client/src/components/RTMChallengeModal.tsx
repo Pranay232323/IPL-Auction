@@ -106,11 +106,11 @@ export const RTMChallengeModal: React.FC<RTMChallengeModalProps> = ({
   }, [rtmPrompt.timerEndsAt, rtmPrompt.stage, currentPrice, raisedPrice, origMeta, winnerMeta]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md">
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-amber-500/40 bg-stadium-950 shadow-2xl shadow-amber-500/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-4 backdrop-blur-md">
+      <div className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-amber-500/40 bg-stadium-950 shadow-2xl shadow-amber-500/20">
         {/* Animated Accent Bar */}
         <div
-          className="h-2 w-full transition-all duration-100 ease-linear"
+          className="h-2 w-full shrink-0 transition-all duration-100 ease-linear"
           style={{
             width: `${percentLeft}%`,
             background:
@@ -122,7 +122,7 @@ export const RTMChallengeModal: React.FC<RTMChallengeModalProps> = ({
           }}
         />
 
-        <div className="p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {/* Top Stage Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
